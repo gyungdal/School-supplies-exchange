@@ -2,11 +2,13 @@ package com.gyungdal.schooluniform_student.activity.signup;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -53,10 +55,22 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
             public void onClick(View view) {
                 if(!(stateList.getSelectedItem().toString().isEmpty() ||
                         schoolNameList.getSelectedItem().toString().isEmpty())){
-                    Intent intent = new Intent(SetSchool.this, SignUp.class);
-                    intent.putExtra("name", (String)schoolNameList.getSelectedItem());
-                    intent.putExtra("area", (String)stateList.getSelectedItem());
-                    startActivity(intent);
+                    new AlertDialog.Builder(SetSchool.this)
+                            .setTitle(getString(R.string.confirm))
+                            .setMessage(getString(R.string.state) + " : " + stateList.getSelectedItem().toString() + "\r\n"
+                                + getString(R.string.city) + " : " + cityList.getSelectedItem().toString() + "\r\n" +
+                                    getString(R.string.name) + " : " + schoolNameList.getSelectedItem().toString() + "\r\n")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int whichButton) {
+                                    Intent intent = new Intent(SetSchool.this, SignUp.class);
+                                    intent.putExtra("name", (String)schoolNameList.getSelectedItem());
+                                    intent.putExtra("area", (String)stateList.getSelectedItem());
+                                    startActivity(intent);
+                                    SetSchool.this.finish();
+                                }})
+                            .setNegativeButton(android.R.string.no, null).show();
                 }
             }
         });
@@ -98,7 +112,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
     private void setSchoolTypeList(){
         ArrayList<String> result = SchoolData.getInstance().getSchoolType();
         if(result == null || result.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "빔", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
             return;
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,

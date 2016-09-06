@@ -24,6 +24,11 @@ public class SignUp extends AppCompatActivity {
     private static final String registerPage = "http://gyungdal.xyz/school/bbs/register.php";
     private String schoolArea, schoolName;
     private WebView webView;
+
+    //https://devtalk.nvidia.com/default/topic/785551/embedded-systems/my-jetson-focused-linux-tips-and-tricks/
+    //http://elinux.org/Jetson/PWM
+    //http://jetsonhacks.com/2015/12/08/gpioi2c-on-jetson-tx1-lidar-lite-v2-installation/
+
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,6 @@ public class SignUp extends AppCompatActivity {
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
-            view.setClickable(false);
             Log.d("Browse", url);
         }
 
@@ -69,6 +73,7 @@ public class SignUp extends AppCompatActivity {
             if(url.equals("http://gyungdal.xyz/school/bbs/register_result.php")){
                 Log.i(TAG, "Register Done!!!");
                 Log.i(TAG, "Back to main page");
+                SignUp.this.finish();
             }
             if(url.contains("http://gyungdal.xyz/school"))
                 view.loadUrl(url);

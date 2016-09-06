@@ -11,4 +11,8 @@
     <string name="login">Login</string>
     <string name="id_hint">ID</string>
     <string name="pw_hint">Password</string>
+    <string name="confirm">Confirm</string>
+    <string name="name">Name</string>
+    <string name="state">State</string>
+    <string name="city">City</string>
 </resources>

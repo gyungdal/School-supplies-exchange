@@ -31,6 +31,13 @@ public class SchoolData extends AsyncTask<Void, Void, Void>{
 
     }
 
+    public static void deleteInstance(){
+        instance.items = null;
+        instance.context = null;
+        instance = null;
+        System.gc();
+    }
+
     public static void setInstance(Context context){
         Log.i(TAG, "Set instance");
         instance = new SchoolData();
