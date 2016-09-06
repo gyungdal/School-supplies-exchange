@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Schooluniform_student</string>
+    <string name="action_settings">Settings</string>
+    <string name="state_spinner_prompt">State</string>
+    <string name="detail_spinner_prompt">Detail address</string>
+    <string name="school_type_spinner_prompt">School type</string>
+    <string name="school_name_spinner_prompt">School name</string>
+    <string name="wrong_access">Wrong access, restart process</string>
+    <string name="sign_up">Sign up</string>
+    <string name="auto_login">Auto login</string>
+    <string name="login">Login</string>
+    <string name="id_hint">ID</string>
+    <string name="pw_hint">Password</string>
+</resources>
