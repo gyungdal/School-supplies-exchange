@@ -60,7 +60,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
                             .setMessage(getString(R.string.state) + " : " + stateList.getSelectedItem().toString() + "\r\n"
                                 + getString(R.string.city) + " : " + cityList.getSelectedItem().toString() + "\r\n" +
                                     getString(R.string.name) + " : " + schoolNameList.getSelectedItem().toString() + "\r\n")
-                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .setIcon(android.R.drawable.ic_dialog_info)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
