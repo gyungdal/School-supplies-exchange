@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.signup.SetSchool;
@@ -58,6 +59,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, SetSchool.class));
+            }
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Not ready...", Toast.LENGTH_SHORT).show();
             }
         });
         getPermission();
