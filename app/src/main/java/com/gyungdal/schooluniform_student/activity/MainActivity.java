@@ -4,19 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,7 +19,12 @@ import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.signup.SetSchool;
+import com.gyungdal.schooluniform_student.helper.Permission;
+import com.gyungdal.schooluniform_student.helper.SharedHelper;
+import com.gyungdal.schooluniform_student.internet.Login;
 import com.gyungdal.schooluniform_student.school.SchoolData;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
@@ -43,6 +42,11 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+        SharedHelper sharedHelper = new SharedHelper(getApplicationContext());
+        if(sharedHelper.getValue("auto_login").equals("true")){
+            startActivity(new Intent(MainActivity.this, AutoLoginSplash.class));
+            MainActivity.this.finish();
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         id = (EditText)findViewById(R.id.id);
@@ -65,23 +69,19 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Not ready...", Toast.LENGTH_SHORT).show();
+                Login login = new Login(id.getText().toString(), pw.getText().toString());
+                try {
+                    if(login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()){
+                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (InterruptedException e) {
+                    Log.e(TAG, e.getMessage());
+                } catch (ExecutionException e) {
+                    Log.e(TAG, e.getMessage());
+                }
             }
         });
-        getPermission();
+        Permission.request(getApplicationContext(), Manifest.permission.INTERNET);
     }
 
-    private void getPermission() {
-        if (ContextCompat.checkSelfPermission(MainActivity.this,
-                Manifest.permission.INTERNET)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this,
-                    Manifest.permission.INTERNET)) {
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.INTERNET},
-                        USE_INTERNET);
-            }
-        }
-    }
 }

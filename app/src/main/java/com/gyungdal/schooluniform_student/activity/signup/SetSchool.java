@@ -11,6 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,52 +40,56 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_set_school);
-        if(getSupportActionBar() != null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        stateList = (Spinner)findViewById(R.id.stateList);
-        cityList = (Spinner)findViewById(R.id.cityList);
-        schoolTypeList = (Spinner)findViewById(R.id.schoolTypeList);
-        schoolNameList = (Spinner)findViewById(R.id.schoolNameList);
-        nextButton = (Button)findViewById(R.id.schoolSetButton);
+        stateList = (Spinner) findViewById(R.id.stateList);
+        cityList = (Spinner) findViewById(R.id.cityList);
+        schoolTypeList = (Spinner) findViewById(R.id.schoolTypeList);
+        schoolNameList = (Spinner) findViewById(R.id.schoolNameList);
+        nextButton = (Button) findViewById(R.id.schoolSetButton);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!(stateList.getSelectedItem().toString().isEmpty() ||
-                        schoolNameList.getSelectedItem().toString().isEmpty())){
+                if (!(stateList.getSelectedItem().toString().isEmpty() ||
+                        schoolNameList.getSelectedItem().toString().isEmpty())) {
                     new AlertDialog.Builder(SetSchool.this)
                             .setTitle(getString(R.string.confirm))
                             .setMessage(getString(R.string.state) + " : " + stateList.getSelectedItem().toString() + "\r\n"
-                                + getString(R.string.city) + " : " + cityList.getSelectedItem().toString() + "\r\n" +
+                                    + getString(R.string.city) + " : " + cityList.getSelectedItem().toString() + "\r\n" +
                                     getString(R.string.name) + " : " + schoolNameList.getSelectedItem().toString() + "\r\n")
                             .setIcon(android.R.drawable.ic_dialog_info)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     Intent intent = new Intent(SetSchool.this, SignUp.class);
-                                    intent.putExtra("name", (String)schoolNameList.getSelectedItem());
-                                    intent.putExtra("area", (String)stateList.getSelectedItem());
+                                    intent.putExtra("name", (String) schoolNameList.getSelectedItem());
+                                    intent.putExtra("area", (String) stateList.getSelectedItem());
                                     startActivity(intent);
                                     SetSchool.this.finish();
-                                }})
+                                }
+                            })
                             .setNegativeButton(android.R.string.no, null).show();
                 }
             }
         });
         setStateList();
-        //setPrompt();
     }
 
-    //prompt를 지정해줘도 그냥 바로 삭제됨... Prompt 삭제....
-    private void setPrompt(){
-        stateList.setPrompt(getString(R.string.state_spinner_prompt));
-        cityList.setPrompt(getString(R.string.detail_spinner_prompt));
-        schoolTypeList.setPrompt(getString(R.string.school_type_spinner_prompt));
-        schoolNameList.setPrompt(getString(R.string.school_name_spinner_prompt));
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                SetSchool.this.finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
+
     private void setStateList(){
         ArrayList<String> result = SchoolData.getInstance().getState();
         if(result == null || result.isEmpty()) {

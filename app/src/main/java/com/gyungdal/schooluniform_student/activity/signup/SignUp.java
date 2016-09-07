@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -34,8 +35,8 @@ public class SignUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
-        setContentView(R.layout.activity_sign_up);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        setContentView(R.layout.activity_sign_up);
         Intent intent = getIntent();
         if(intent != null){
             schoolName = intent.getStringExtra("name");
@@ -47,7 +48,6 @@ public class SignUp extends AppCompatActivity {
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setSaveFormData(true);
-        webView.getSettings().setSupportMultipleWindows(true);
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setAppCacheEnabled(true);
@@ -58,7 +58,6 @@ public class SignUp extends AppCompatActivity {
         webView.loadUrl(registerPage);
 
     }
-
 
     protected class ViewClient extends WebViewClient {
 

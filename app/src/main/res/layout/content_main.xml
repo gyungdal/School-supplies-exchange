@@ -42,7 +42,7 @@
                 android:singleLine="true"
                 android:maxEms="80"
                 android:textSize="@dimen/input_text_size"
-                android:imeOptions="actionDone"
+                android:imeOptions="actionNext"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/round_edittext_focus"
                 android:layout_above="@+id/pw"/>
@@ -53,11 +53,12 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/pw_hint"
                 android:textStyle="bold"
+                android:inputType="textPassword"
                 android:layout_centerInParent="true"
                 android:textSize="@dimen/input_text_size"
                 android:maxEms="80"
                 android:singleLine="true"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/round_edittext_focus"/>
 
