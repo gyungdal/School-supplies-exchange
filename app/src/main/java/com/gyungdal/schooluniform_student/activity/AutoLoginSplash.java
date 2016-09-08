@@ -5,16 +5,17 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
 import com.gyungdal.schooluniform_student.internet.Login;
-import com.gyungdal.schooluniform_student.school.SchoolData;
 
 import java.util.concurrent.ExecutionException;
 
@@ -23,6 +24,9 @@ import java.util.concurrent.ExecutionException;
  */
 public class AutoLoginSplash extends AppCompatActivity {
     private static final String TAG = AutoLoginSplash.class.getName();
+    private static final int SUCCESS = 0;
+    private static final int OFFLINE = 1;
+    private static final int ERROR = 2;
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +41,22 @@ public class AutoLoginSplash extends AppCompatActivity {
             sharedHelper.getValue("id"),
             sharedHelper.getValue("pw"));
         try {
-            if(login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()){
-                startActivity(new Intent(AutoLoginSplash.this, MainActivity.class));
-                AutoLoginSplash.this.finish();
+
+            switch (login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()){
+                case SUCCESS :
+                    startActivity(new Intent(AutoLoginSplash.this, MainActivity.class));
+                    AutoLoginSplash.this.finish();
+                    Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case OFFLINE :
+                    Toast.makeText(getApplicationContext(), "OFFLINE", Toast.LENGTH_LONG).show();
+                    ActivityCompat.finishAffinity(AutoLoginSplash.this);
+                    break;
+
+                case ERROR :
+                    Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                    break;
             }
         } catch (InterruptedException e) {
             Log.e(TAG, e.getMessage());

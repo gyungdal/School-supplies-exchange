@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,9 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
-    private static final int USE_INTERNET = 1;
+    private static final int SUCCESS = 0;
+    private static final int OFFLINE = 1;
+    private static final int ERROR = 2;
     private EditText id;
     private EditText pw;
     private Button login;
@@ -71,8 +74,23 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Login login = new Login(id.getText().toString(), pw.getText().toString());
                 try {
-                    if(login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()){
-                        Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                    switch (login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()){
+                        case SUCCESS :
+                            SharedHelper shared = new SharedHelper(getApplicationContext());
+                            shared.setValue("id", id.getText().toString());
+                            shared.setValue("pw", pw.getText().toString());
+                            shared.setValue("auto_login", autoLogin.isChecked() ? "true" : "false");
+                            Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case OFFLINE :
+                            Toast.makeText(getApplicationContext(), "OFFLINE", Toast.LENGTH_LONG).show();
+                            ActivityCompat.finishAffinity(MainActivity.this);
+                            break;
+
+                        case ERROR :
+                            Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                            break;
                     }
                 } catch (InterruptedException e) {
                     Log.e(TAG, e.getMessage());

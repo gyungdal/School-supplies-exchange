@@ -20,7 +20,6 @@ public class SharedHelper {
                             Activity.MODE_PRIVATE).edit();
         editor.putString(key, value);
         editor.apply();
-        //apply 는 비동기 처리 commit은 동기식 처리라서 apply로 전환
     }
 
     public String getValue(String key){
