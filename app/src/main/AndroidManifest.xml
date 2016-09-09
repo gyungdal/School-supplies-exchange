@@ -19,5 +19,8 @@
         </activity>
         <activity android:name=".activity.signup.SetSchool"/>
         <activity android:name=".activity.signup.SignUp"/>
+        <activity android:name=".activity.board.ArticleList"/>
+        <activity android:name=".activity.AutoLoginSplash"/>
+
     </application>
 </manifest>

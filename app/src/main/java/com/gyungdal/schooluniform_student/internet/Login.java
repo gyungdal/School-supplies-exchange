@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 
 import org.jsoup.Jsoup;
@@ -14,18 +15,14 @@ import org.jsoup.Connection.*;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.net.URL;
 
 
 /**
  * Created by GyungDal on 2016-09-07.
  */
-public class Login extends AsyncTask<String, Integer, Integer> {
+public class Login extends AsyncTask<String, Integer, Config.State> {
     private static final String TAG = Login.class.getName();
-    private static final String LOGIN_URL = "http://gyungdal.xyz/school/bbs/login_check.php";
-    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0)";
-    private static final int SUCCESS = 0;
-    private static final int OFFLINE = 1;
-    private static final int ERROR = 2;
 
     private ProgressBar progressBar;
     private TextView textView;
@@ -52,36 +49,44 @@ public class Login extends AsyncTask<String, Integer, Integer> {
     }
 
     @Override
-    protected Integer doInBackground(String... params) {
+    protected Config.State doInBackground(String... params) {
         try {
-            if(!isOnline()) {
-                return OFFLINE;
+            if(isOnline()) {
+                Log.i(TAG, "Maybe... Server error...");
+                return Config.State.OFFLINE;
             }
             Log.i(TAG, "Start Login");
-            if(context != null)
                 publishProgress(1);
-            Response response = Jsoup.connect(LOGIN_URL)
+            String url = Config.SERVER_URL + Config.LOGIN_PATH;
+            if(!url.contains(Config.SERVER_PROTOCAL))
+                url = Config.SERVER_PROTOCAL + url;
+            Log.i(TAG, url);
+            Response response = Jsoup.connect(url)
                     .header("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3")
                     .header("Content-Type", "application/x-www-form-urlencoded")
-                    .data("url", "/school/")
+                    .data("url", "/" +
+                            Config.SERVER_URL.split("/")[Config.SERVER_URL.split("/").length - 1] + "/")
                     .data("mb_id", id)
                     .data("mb_password", pw)
-                    .userAgent(USER_AGENT)
+                    .userAgent(Config.USER_AGENT)
                     .method(Method.POST)
                     .execute();
-            if(context != null)
                 publishProgress(2);
-            for( String key : response.cookies().keySet() )
-                Log.i(TAG, String.format("키 : %s, 값 : %s", key, response.cookies().get(key)) );
             Document doc = response.parse();
             Log.i(TAG, doc.toString());
-            if(context != null)
+            if(doc.title().contains("오류안내"))
+                return Config.State.FAIL_AUTH;
+
+            CookieStore.getInstance().setCookies(response.cookies());
+            for( String key : response.cookies().keySet() )
+                Log.i(TAG, String.format("키 : %s, 값 : %s", key, response.cookies().get(key)) );
+
                 publishProgress(3);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
-            return ERROR;
+            return Config.State.ERROR;
         }
-        return SUCCESS;
+        return Config.State.SUCCESS;
     }
 
     @Override
@@ -91,7 +96,7 @@ public class Login extends AsyncTask<String, Integer, Integer> {
             progressBar.setProgress(values[0]);
             switch (values[0]) {
                 case 0:
-                    textView.setText("Init...");
+                    textView.setText("Init…");
                 case 1:
                     textView.setText(context.getString(R.string.access_login_server));
                     break;
@@ -110,8 +115,12 @@ public class Login extends AsyncTask<String, Integer, Integer> {
     }
 
     private boolean isOnline() throws IOException, InterruptedException {
+        String url = Config.SERVER_URL;
+        if(!url.contains(Config.SERVER_PROTOCAL))
+            url = Config.SERVER_PROTOCAL + url;
         Runtime runtime = Runtime.getRuntime();
-        Process proc = runtime.exec("ping gyungdal.xyz/school/ -c 1"); // other servers, for example
+        Process proc = runtime.exec("ping "
+                + new URL(url).getHost() + " -c 1"); // other servers, for example
         proc.waitFor();
         int exit = proc.exitValue();
         if (exit == 0)

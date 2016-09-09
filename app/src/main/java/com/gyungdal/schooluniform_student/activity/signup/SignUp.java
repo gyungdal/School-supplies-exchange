@@ -1,6 +1,6 @@
 package com.gyungdal.schooluniform_student.activity.signup;
 
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 
 /**
@@ -21,7 +22,7 @@ import com.gyungdal.schooluniform_student.R;
  */
 public class SignUp extends AppCompatActivity {
     private static final String TAG = SignUp.class.getName();
-    private static final String registerPage = "http://gyungdal.xyz/school/bbs/register.php";
+    private static final String registerPage = Config.SERVER_URL + Config.REGISTER_PATH;
     private String schoolArea, schoolName;
     private WebView webView;
 
@@ -29,7 +30,7 @@ public class SignUp extends AppCompatActivity {
     //http://elinux.org/Jetson/PWM
     //http://jetsonhacks.com/2015/12/08/gpioi2c-on-jetson-tx1-lidar-lite-v2-installation/
 
-    @SuppressLint("NewApi")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,12 +69,15 @@ public class SignUp extends AppCompatActivity {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.equals("http://gyungdal.xyz/school/bbs/register_result.php")){
+            if(url.equals(Config.SERVER_URL + Config.REGISTER_RESULT_PATH)){
                 Log.i(TAG, "Register Done!!!");
                 Log.i(TAG, "Back to main page");
+                Toast.makeText(SignUp.this, getString(R.string.sign_up_success)
+                        , Toast.LENGTH_SHORT).show();
                 SignUp.this.finish();
             }
-            if(url.contains("http://gyungdal.xyz/school"))
+            if(url.contains(Config.SERVER_URL
+                    + Config.REGISTER_PATH.substring(0, Config.REGISTER_PATH.indexOf("/"))))
                 view.loadUrl(url);
             else{
                 Toast.makeText(getApplicationContext()

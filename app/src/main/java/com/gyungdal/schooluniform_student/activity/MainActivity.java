@@ -1,10 +1,12 @@
 package com.gyungdal.schooluniform_student.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,7 +20,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
+import com.gyungdal.schooluniform_student.activity.board.ArticleList;
 import com.gyungdal.schooluniform_student.activity.signup.SetSchool;
 import com.gyungdal.schooluniform_student.helper.Permission;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
@@ -29,16 +36,13 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
-    private static final int SUCCESS = 0;
-    private static final int OFFLINE = 1;
-    private static final int ERROR = 2;
     private EditText id;
     private EditText pw;
     private Button login;
     private TextView signUp;
     private CheckBox autoLogin;
 
-    @SuppressLint("NewApi")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,17 +50,20 @@ public class MainActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
         SharedHelper sharedHelper = new SharedHelper(getApplicationContext());
-        if(sharedHelper.getValue("auto_login").equals("true")){
-            startActivity(new Intent(MainActivity.this, AutoLoginSplash.class));
-            MainActivity.this.finish();
+        if (sharedHelper.getValue("auto_login").equals("true")) {
+            Intent intent = getIntent();
+            if(intent != null && !intent.getBooleanExtra("fail", false)){
+                startActivity(new Intent(MainActivity.this, AutoLoginSplash.class));
+                MainActivity.this.finish();
+            }
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        id = (EditText)findViewById(R.id.id);
-        pw = (EditText)findViewById(R.id.pw);
-        login = (Button)findViewById(R.id.login_button);
-        signUp = (TextView)findViewById(R.id.sign_up);
-        autoLogin = (CheckBox)findViewById(R.id.auto_login);
+        id = (EditText) findViewById(R.id.id);
+        pw = (EditText) findViewById(R.id.pw);
+        login = (Button) findViewById(R.id.login_button);
+        signUp = (TextView) findViewById(R.id.sign_up);
+        autoLogin = (CheckBox) findViewById(R.id.auto_login);
         if (SchoolData.getInstance() == null) {
             SchoolData.setInstance(getApplicationContext());
             SchoolData.getInstance().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -72,24 +79,29 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                SharedHelper shared = new SharedHelper(getApplicationContext());
+                shared.setValue("id", id.getText().toString());
+                shared.setValue("pw", pw.getText().toString());
+                shared.setValue("auto_login", autoLogin.isChecked() ? "true" : "false");
                 Login login = new Login(id.getText().toString(), pw.getText().toString());
                 try {
-                    switch (login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get()){
-                        case SUCCESS :
-                            SharedHelper shared = new SharedHelper(getApplicationContext());
-                            shared.setValue("id", id.getText().toString());
-                            shared.setValue("pw", pw.getText().toString());
-                            shared.setValue("auto_login", autoLogin.isChecked() ? "true" : "false");
-                            Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+                    Config.State state = login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                    Toast.makeText(MainActivity.this, state.toString(), Toast.LENGTH_SHORT).show();
+                    switch (state) {
+                        case SUCCESS:
+                            startActivity(new Intent(MainActivity.this, ArticleList.class));
+                            MainActivity.this.finish();
                             break;
 
-                        case OFFLINE :
-                            Toast.makeText(getApplicationContext(), "OFFLINE", Toast.LENGTH_LONG).show();
+                        case OFFLINE:
                             ActivityCompat.finishAffinity(MainActivity.this);
                             break;
 
-                        case ERROR :
-                            Toast.makeText(getApplicationContext(), "ERROR", Toast.LENGTH_SHORT).show();
+                        case ERROR:
+                            break;
+
+                        case FAIL_AUTH:
                             break;
                     }
                 } catch (InterruptedException e) {
@@ -102,4 +114,13 @@ public class MainActivity extends AppCompatActivity {
         Permission.request(getApplicationContext(), Manifest.permission.INTERNET);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 }

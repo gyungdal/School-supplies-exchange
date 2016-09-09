@@ -26,9 +26,7 @@ public class SchoolData extends AsyncTask<Void, Void, Void>{
     }
 
     public static void deleteInstance(){
-        instance.items = null;
-        instance.context = null;
-        instance = null;
+        instance.items.clear();
         System.gc();
     }
 

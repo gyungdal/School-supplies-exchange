@@ -15,4 +15,7 @@
     <string name="access_login_server">Access login server</string>
     <string name="request_login">Request Login…</string>
     <string name="login_success">Login success!</string>
+    <string name="sign_up_success">Sign up success!</string>
+    <string name="offline_finish">Now offline\nApp force exit</string>
+    <string name="auth_fail">Auth Fail…</string>
 </resources>
