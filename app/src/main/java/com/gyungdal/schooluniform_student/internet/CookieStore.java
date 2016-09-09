@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by GyungDal on 2016-09-08.
  */
 public class CookieStore {
-    private HashMap<String, String> cookies;
+    private Map<String, String> cookies;
     private static CookieStore instance;
 
     static {
@@ -15,10 +15,10 @@ public class CookieStore {
     }
 
     public void setCookies(Map<String, String> cookies){
-        this.cookies = new HashMap<>(cookies);
+        this.cookies = cookies;
     }
 
-    public HashMap<String, String> getCookies(){
+    public Map<String, String> getCookies(){
         return this.cookies;
     }
 

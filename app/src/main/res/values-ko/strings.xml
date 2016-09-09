@@ -16,4 +16,7 @@
     <string name="request_login">로그인 시도중…</string>
     <string name="access_login_server">로그인 서버에 접근중…</string>
     <string name="action_settings">설정</string>
+    <string name="offline_finish">지금은 오프라인 상태입니다\n앱을 종료합니다.</string>
+    <string name="sign_up_success">회원 가입 성공!</string>
+    <string name="auth_fail">인증 실패...</string>
 </resources>

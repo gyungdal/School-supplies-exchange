@@ -51,7 +51,7 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
     @Override
     protected Config.State doInBackground(String... params) {
         try {
-            if(isOnline()) {
+            if(!isOnline()) {
                 Log.i(TAG, "Maybe... Server error...");
                 return Config.State.OFFLINE;
             }
