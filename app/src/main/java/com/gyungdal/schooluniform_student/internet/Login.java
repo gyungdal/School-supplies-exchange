@@ -44,8 +44,8 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         this.context = context;
         this.id = id;
         this.pw = pw;
-        progressBar.setMax(3);
-        publishProgress(0);
+        this.progressBar.setMax(3);
+        this.publishProgress(0);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
             url = Config.SERVER_PROTOCAL + url;
         Runtime runtime = Runtime.getRuntime();
         Process proc = runtime.exec("ping "
-                + new URL(url).getHost() + " -c 1"); // other servers, for example
+                + new URL(url).getHost() + " -c 1");
         proc.waitFor();
         int exit = proc.exitValue();
         if (exit == 0)

@@ -25,9 +25,14 @@ public class SchoolData extends AsyncTask<Void, Void, Void>{
 
     }
 
-    public static void deleteInstance(){
+    public static void clearItems(){
         instance.items.clear();
         System.gc();
+    }
+
+    public static void setItems(){
+        instance.items = new ArrayList<>(schoolLength);
+        instance.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public static void setInstance(Context context){
@@ -90,9 +95,17 @@ public class SchoolData extends AsyncTask<Void, Void, Void>{
     }
 
     public ArrayList<String> getSchoolType(){
-        ArrayList<String> result = new ArrayList<>(2);
-        result.add("중학교");
-        result.add("고등학교");
+        HashMap<String, Character> list = new HashMap<>();
+        ArrayList<String> result = new ArrayList<>();
+        if(instance.items == null)
+            return null;
+        for(Item item : instance.items)
+            list.put(item.schoolType, '.');
+
+        Set key = list.keySet();
+        for(Iterator iterator = key.iterator(); iterator.hasNext();)
+            result.add((String)iterator.next());
+
         return result;
     }
 

@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.school.SchoolData;
@@ -24,7 +23,6 @@ public class ArticleList extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_article_list);
-        SchoolData.deleteInstance();
-
+        SchoolData.clearItems();
     }
 }
