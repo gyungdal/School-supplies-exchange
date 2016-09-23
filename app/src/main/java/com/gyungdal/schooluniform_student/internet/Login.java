@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
+import com.gyungdal.schooluniform_student.internet.store.CookieStore;
+import com.gyungdal.schooluniform_student.internet.store.ExtraInfoStore;
 
 import org.jsoup.Jsoup;
 import org.jsoup.Connection.*;
@@ -62,21 +64,22 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
                 url = Config.SERVER_PROTOCAL + url;
             Log.i(TAG, url);
             Response response = Jsoup.connect(url)
-                    .header("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3")
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .data("url", "/" +
-                            Config.SERVER_URL.split("/")[Config.SERVER_URL.split("/").length - 1] + "/")
-                    .data("mb_id", id)
-                    .data("mb_password", pw)
-                    .userAgent(Config.USER_AGENT)
-                    .method(Method.POST)
-                    .execute();
-                publishProgress(2);
+                .header("Accept-Language", "ko-KR,ko;q=0.8,en-US;q=0.5,en;q=0.3")
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .data("url", "/" +
+                        Config.SERVER_URL.split("/")[Config.SERVER_URL.split("/").length - 1] + "/")
+                .data("mb_id", id)
+                .data("mb_password", pw)
+                .userAgent(Config.USER_AGENT)
+                .method(Method.POST)
+                .execute();
+            publishProgress(2);
             Document doc = response.parse();
             Log.i(TAG, doc.toString());
             if(doc.title().contains("오류안내"))
                 return Config.State.FAIL_AUTH;
-
+            ExtraInfoStore.getInstance().setValue(Config.NICK_NAME_STORE
+                    , doc.select("#ol_after_hd > strong:nth-child(2)").get(0).text());
             CookieStore.getInstance().setCookies(response.cookies());
             for( String key : response.cookies().keySet() )
                 Log.i(TAG, String.format("키 : %s, 값 : %s", key, response.cookies().get(key)) );

@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,9 +19,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.board.ArticleList;
@@ -30,7 +26,7 @@ import com.gyungdal.schooluniform_student.activity.signup.SetSchool;
 import com.gyungdal.schooluniform_student.helper.Permission;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
 import com.gyungdal.schooluniform_student.internet.Login;
-import com.gyungdal.schooluniform_student.school.SchoolData;
+import com.gyungdal.schooluniform_student.school.SchoolListData;
 
 import java.util.concurrent.ExecutionException;
 
@@ -64,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
         login = (Button) findViewById(R.id.login_button);
         signUp = (TextView) findViewById(R.id.sign_up);
         autoLogin = (CheckBox) findViewById(R.id.auto_login);
-        if (SchoolData.getInstance() == null) {
-            SchoolData.setInstance(getApplicationContext());
-            SchoolData.getInstance().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (SchoolListData.getInstance() == null) {
+            SchoolListData.setInstance(getApplicationContext());
+            SchoolListData.getInstance().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         signUp.setOnClickListener(new View.OnClickListener() {

@@ -14,20 +14,19 @@ import java.util.Set;
 /**
  * Created by GyungDal on 2016-09-02.
  */
-public class SchoolData extends AsyncTask<Void, Void, Void>{
-    private static final String TAG = SchoolData.class.getName();
+public class SchoolListData extends AsyncTask<Void, Void, Void>{
+    private static final String TAG = SchoolListData.class.getName();
     private static final int schoolLength = 5582;
-    private static SchoolData instance;
+    private static SchoolListData instance;
     private Context context;
     private ArrayList<Item> items;
 
-    public SchoolData(){
+    public SchoolListData(){
 
     }
 
     public static void clearItems(){
         instance.items.clear();
-        System.gc();
     }
 
     public static void setItems(){
@@ -37,12 +36,12 @@ public class SchoolData extends AsyncTask<Void, Void, Void>{
 
     public static void setInstance(Context context){
         Log.i(TAG, "Set instance");
-        instance = new SchoolData();
+        instance = new SchoolListData();
         instance.items = new ArrayList<>(schoolLength);
         instance.context = context;
     }
 
-    public static SchoolData getInstance(){
+    public static SchoolListData getInstance(){
         return instance;
     }
 

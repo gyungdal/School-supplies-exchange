@@ -1,5 +1,6 @@
 package com.gyungdal.schooluniform_student.activity.signup;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -22,14 +23,11 @@ import com.gyungdal.schooluniform_student.R;
  */
 public class SignUp extends AppCompatActivity {
     private static final String TAG = SignUp.class.getName();
-    private static final String registerPage = Config.SERVER_URL + Config.REGISTER_PATH;
+    private String registerPage = Config.SERVER_URL + Config.REGISTER_PATH;
     private String schoolArea, schoolName;
     private WebView webView;
 
-    //https://devtalk.nvidia.com/default/topic/785551/embedded-systems/my-jetson-focused-linux-tips-and-tricks/
-    //http://elinux.org/Jetson/PWM
-    //http://jetsonhacks.com/2015/12/08/gpioi2c-on-jetson-tx1-lidar-lite-v2-installation/
-
+    @SuppressLint({"SetJavaScriptEnabled", "AddJavascriptInterface"})
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +45,7 @@ public class SignUp extends AppCompatActivity {
         webView = (WebView)findViewById(R.id.signWebView);
 
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new JavaScriptInterface(), "Android");
         webView.getSettings().setSaveFormData(true);
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
@@ -55,6 +54,8 @@ public class SignUp extends AppCompatActivity {
             webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 
         webView.setWebViewClient(new ViewClient());
+        if(!registerPage.contains(Config.SERVER_PROTOCAL))
+            registerPage = Config.SERVER_PROTOCAL + registerPage;
         webView.loadUrl(registerPage);
 
     }
@@ -65,27 +66,34 @@ public class SignUp extends AppCompatActivity {
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
             Log.d("Browse", url);
+            Log.i(TAG, Config.SERVER_URL
+                    + Config.REGISTER_PATH.substring(0, Config.REGISTER_PATH.indexOf("/")));
         }
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if(url.equals(Config.SERVER_URL + Config.REGISTER_RESULT_PATH)){
+            if(url.equals(Config.SERVER_URL + Config.REGISTER_RESULT_PATH)) {
                 Log.i(TAG, "Register Done!!!");
                 Log.i(TAG, "Back to main page");
                 Toast.makeText(SignUp.this, getString(R.string.sign_up_success)
                         , Toast.LENGTH_SHORT).show();
                 SignUp.this.finish();
             }
-            if(url.contains(Config.SERVER_URL
-                    + Config.REGISTER_PATH.substring(0, Config.REGISTER_PATH.indexOf("/"))))
+            //TODO : id를 뭐로 했는지 가져오기
+            /*if(url.contains(Config.SERVER_URL
+                    + Config.REGISTER_PATH.substring(0, Config.REGISTER_PATH.indexOf("/")))) {
+             */   if(url.equals(Config.SERVER_PROTOCAL + Config.SERVER_URL + Config.REGISTER_RESULT_PATH)){
+                    Log.i(TAG, "Catch!!!");
+                    view.loadUrl("javascript:window.Android.getHtml" +
+                            "(document.getElementsById(\"reg_mb_id\")[0].value);");
+                }
                 view.loadUrl(url);
-            else{
+            /*} else{
                 Toast.makeText(getApplicationContext()
                         , getString(R.string.wrong_access), Toast.LENGTH_SHORT).show();
                 view.loadUrl(registerPage);
-            }
+            }*/
             return true;
         }
     }
-
 }

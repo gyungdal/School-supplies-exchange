@@ -1,6 +1,5 @@
-package com.gyungdal.schooluniform_student.internet;
+package com.gyungdal.schooluniform_student.internet.store;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**

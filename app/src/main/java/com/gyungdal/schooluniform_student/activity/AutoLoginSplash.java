@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class AutoLoginSplash extends AppCompatActivity {
     private static final String TAG = AutoLoginSplash.class.getName();
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -15,11 +15,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.R;
-import com.gyungdal.schooluniform_student.school.SchoolData;
+import com.gyungdal.schooluniform_student.internet.school.Item;
+import com.gyungdal.schooluniform_student.internet.store.SchoolStore;
+import com.gyungdal.schooluniform_student.school.SchoolListData;
 
 import java.util.ArrayList;
 
@@ -30,6 +33,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
     private static final String TAG = SetSchool.class.getName();
     private Spinner stateList, cityList, schoolTypeList, schoolNameList;
     private Button nextButton;
+    private EditText schoolGrade, schoolClass, schoolNumber;
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -41,21 +45,29 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        schoolClass = (EditText) findViewById(R.id.school_class);
+        schoolGrade = (EditText) findViewById(R.id.school_grade);
+        schoolNumber = (EditText) findViewById(R.id.school_number);
         stateList = (Spinner) findViewById(R.id.stateList);
         cityList = (Spinner) findViewById(R.id.cityList);
         schoolTypeList = (Spinner) findViewById(R.id.schoolTypeList);
         schoolNameList = (Spinner) findViewById(R.id.schoolNameList);
         nextButton = (Button) findViewById(R.id.schoolSetButton);
+        SchoolStore.getInstance().setSchool(new Item());
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!(stateList.getSelectedItem().toString().isEmpty() ||
                         schoolNameList.getSelectedItem().toString().isEmpty())) {
+                    SchoolStore.getInstance().setSchoolName((String) schoolNameList.getSelectedItem());
+                    SchoolStore.getInstance().setSchoolNumber(Integer.valueOf(schoolNumber.getText().toString()));
+                    SchoolStore.getInstance().setSchoolClass(Integer.valueOf(schoolClass.getText().toString()));
+                    SchoolStore.getInstance().setSchoolGrade(Integer.valueOf(schoolGrade.getText().toString()));
                     new AlertDialog.Builder(SetSchool.this)
                             .setTitle(getString(R.string.confirm))
                             .setMessage(getString(R.string.state) + " : " + stateList.getSelectedItem().toString() + "\r\n"
-                                    + getString(R.string.city) + " : " + cityList.getSelectedItem().toString() + "\r\n" +
-                                    getString(R.string.name) + " : " + schoolNameList.getSelectedItem().toString() + "\r\n")
+                                    + getString(R.string.city) + " : " + cityList.getSelectedItem().toString() + "\r\n"
+                                    + getString(R.string.name) + " : " + schoolNameList.getSelectedItem().toString() + "\r\n")
                             .setIcon(android.R.drawable.ic_dialog_info)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
@@ -87,7 +99,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void setStateList(){
-        ArrayList<String> result = SchoolData.getInstance().getState();
+        ArrayList<String> result = SchoolListData.getInstance().getState();
         if(result == null || result.isEmpty()) {
             Toast.makeText(getApplicationContext(), "빔", Toast.LENGTH_SHORT).show();
             return;
@@ -99,7 +111,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void setCityList(String state){
-        ArrayList<String> result = SchoolData.getInstance().getCity(state);
+        ArrayList<String> result = SchoolListData.getInstance().getCity(state);
         if(result == null || result.isEmpty()) {
             Toast.makeText(getApplicationContext(), "빔", Toast.LENGTH_SHORT).show();
             return;
@@ -111,7 +123,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
     }
 
     private void setSchoolTypeList(){
-        ArrayList<String> result = SchoolData.getInstance().getSchoolType();
+        ArrayList<String> result = SchoolListData.getInstance().getSchoolType();
         if(result == null || result.isEmpty()) {
             Toast.makeText(getApplicationContext(), "Empty", Toast.LENGTH_SHORT).show();
             return;
@@ -125,7 +137,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
 
     private void setSchoolNameList(){
         ArrayList<String> result =
-                SchoolData.getInstance().getSchoolName(
+                SchoolListData.getInstance().getSchoolName(
                         (String)stateList.getSelectedItem(),
                         (String)cityList.getSelectedItem(),
                         (String)schoolTypeList.getSelectedItem());
