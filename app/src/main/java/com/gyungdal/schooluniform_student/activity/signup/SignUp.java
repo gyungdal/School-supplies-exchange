@@ -45,7 +45,6 @@ public class SignUp extends AppCompatActivity {
         webView = (WebView)findViewById(R.id.signWebView);
 
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.addJavascriptInterface(new JavaScriptInterface(), "Android");
         webView.getSettings().setSaveFormData(true);
         webView.getSettings().setDatabaseEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);

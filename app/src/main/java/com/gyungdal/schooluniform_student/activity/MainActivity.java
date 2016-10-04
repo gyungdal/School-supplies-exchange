@@ -22,10 +22,11 @@ import android.widget.Toast;
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.board.ArticleList;
-import com.gyungdal.schooluniform_student.activity.signup.SetSchool;
+import com.gyungdal.schooluniform_student.activity.signup.SignUp;
 import com.gyungdal.schooluniform_student.helper.Permission;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
 import com.gyungdal.schooluniform_student.internet.Login;
+import com.gyungdal.schooluniform_student.internet.store.SchoolStore;
 import com.gyungdal.schooluniform_student.school.SchoolListData;
 
 import java.util.concurrent.ExecutionException;
@@ -68,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SetSchool.class));
+                startActivity(new Intent(MainActivity.this, SignUp.class));
             }
         });
 
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, state.toString(), Toast.LENGTH_SHORT).show();
                     switch (state) {
                         case SUCCESS:
+                            SchoolStore.getInstance().setId(id.getText().toString());
                             startActivity(new Intent(MainActivity.this, ArticleList.class));
                             MainActivity.this.finish();
                             break;
@@ -98,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
                             break;
 
                         case FAIL_AUTH:
+                            break;
+
+                        case NOT_FOUND_SCHOOL_DATA:
+                            startActivity(new Intent(MainActivity.this, SetSchool.class));
                             break;
                     }
                 } catch (InterruptedException e) {

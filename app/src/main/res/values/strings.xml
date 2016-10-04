@@ -18,6 +18,7 @@
     <string name="sign_up_success">Sign up success!</string>
     <string name="offline_finish">Now offline\nApp force exit</string>
     <string name="auth_fail">Auth Fail…</string>
+    <string name="school_name">School name</string>
     <string name="school_grade">Grade</string>
     <string name="school_class">Class</string>
     <string name="school_number">Number</string>

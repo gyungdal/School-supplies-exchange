@@ -53,11 +53,13 @@ public class SchoolStore {
         log();
     }
 
-    public void setSchool(Item item){
+    public void setItem(Item item){
+        if(item.id.isEmpty() && (!instance.item.id.isEmpty()))
+            item.id = instance.item.id;
         instance.item = item;
     }
 
-    public Item getSchool(){
+    public Item getItem(){
         return instance.item;
     }
 }

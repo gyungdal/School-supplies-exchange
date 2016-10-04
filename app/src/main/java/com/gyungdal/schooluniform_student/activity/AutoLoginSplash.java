@@ -19,6 +19,7 @@ import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.board.ArticleList;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
 import com.gyungdal.schooluniform_student.internet.Login;
+import com.gyungdal.schooluniform_student.internet.store.SchoolStore;
 
 import java.util.concurrent.ExecutionException;
 
@@ -46,6 +47,7 @@ public class AutoLoginSplash extends AppCompatActivity {
             Toast.makeText(AutoLoginSplash.this, state.toString(), Toast.LENGTH_SHORT).show();
             switch (state) {
                 case SUCCESS:
+                    SchoolStore.getInstance().setId(sharedHelper.getValue("id"));
                     startActivity(new Intent(AutoLoginSplash.this, ArticleList.class));
                     AutoLoginSplash.this.finish();
                     break;
@@ -64,6 +66,10 @@ public class AutoLoginSplash extends AppCompatActivity {
                     AutoLoginSplash.this.finish();
                     break;
                 }
+
+                case NOT_FOUND_SCHOOL_DATA:
+                    startActivity(new Intent(AutoLoginSplash.this, SetSchool.class));
+                    break;
             }
         } catch (InterruptedException e) {
             Log.e(TAG, e.getMessage());

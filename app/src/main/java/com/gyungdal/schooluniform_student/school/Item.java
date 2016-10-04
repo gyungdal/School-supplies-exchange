@@ -10,7 +10,7 @@ public class Item {
     public String schoolName;
 
     public Item(String state, String detailArea,
-                    String schoolType, String schoolName){
+                     String schoolType, String schoolName){
         this.state = state;
         this.detailArea = detailArea;
         this.schoolType = schoolType;

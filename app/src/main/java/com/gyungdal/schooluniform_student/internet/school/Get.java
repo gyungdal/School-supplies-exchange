@@ -36,6 +36,17 @@ public class Get extends AsyncTask<Void, Void, Item> {
             if(response.statusCode() != 200)
                 return null;
             Document doc = response.parse();
+
+            //만약 결과값이 없으면 null 리턴
+            if(doc.select("#id").get(0).text().isEmpty())
+                return null;
+
+            result.id = doc.select("#id").get(0).text();
+            result.name = doc.select("#name").get(0).text();
+            result.number = Integer.valueOf(doc.select("#number").get(0).text());
+            result.grade = Integer.valueOf(doc.select("#grade").get(0).text());
+            result.Class = Integer.valueOf(doc.select("#class").get(0).text());
+            result.year = Integer.valueOf(doc.select("#year").get(0).text());
         }catch(Exception e){
             Log.e(TAG, e.getMessage());
         }

@@ -1,9 +1,9 @@
-package com.gyungdal.schooluniform_student.activity.signup;
+package com.gyungdal.schooluniform_student.activity;
 
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.internet.school.Item;
+import com.gyungdal.schooluniform_student.internet.school.Set;
 import com.gyungdal.schooluniform_student.internet.store.SchoolStore;
 import com.gyungdal.schooluniform_student.school.SchoolListData;
 
@@ -53,7 +54,7 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
         schoolTypeList = (Spinner) findViewById(R.id.schoolTypeList);
         schoolNameList = (Spinner) findViewById(R.id.schoolNameList);
         nextButton = (Button) findViewById(R.id.schoolSetButton);
-        SchoolStore.getInstance().setSchool(new Item());
+        SchoolStore.getInstance().setItem(new Item());
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,10 +73,14 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                 public void onClick(DialogInterface dialog, int whichButton) {
-                                    Intent intent = new Intent(SetSchool.this, SignUp.class);
-                                    intent.putExtra("name", (String) schoolNameList.getSelectedItem());
-                                    intent.putExtra("area", (String) stateList.getSelectedItem());
-                                    startActivity(intent);
+                                    Item item = new Item();
+                                    item.id = SchoolStore.getInstance().getItem().id;
+                                    item.grade = Integer.valueOf(schoolGrade.getText().toString());
+                                    item.Class = Integer.valueOf(schoolClass.getText().toString());
+                                    item.number = Integer.valueOf(schoolNumber.getText().toString());
+                                    item.name = (String) schoolNameList.getSelectedItem();
+                                    Set set = new Set(item);
+                                    set.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                                     SetSchool.this.finish();
                                 }
                             })
