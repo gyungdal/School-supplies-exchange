@@ -14,7 +14,7 @@ public class SchoolStore {
     private Item item;
     static {
         instance = new SchoolStore();
-        instance.item = null;
+        instance.item = new Item();
     }
 
     private void log(){
@@ -23,6 +23,7 @@ public class SchoolStore {
         Log.i(TAG, String.valueOf(instance.item.grade));
         Log.i(TAG, String.valueOf(instance.item.Class));
         Log.i(TAG, String.valueOf(instance.item.number));
+        Log.i(TAG, String.valueOf(instance.item.year));
     }
     public static SchoolStore getInstance(){
         return instance;
@@ -54,8 +55,10 @@ public class SchoolStore {
     }
 
     public void setItem(Item item){
-        if(item.id.isEmpty() && (!instance.item.id.isEmpty()))
-            item.id = instance.item.id;
+        if(item.id != null && instance.item != null) {
+            if (item.id.isEmpty() && (!instance.item.id.isEmpty()))
+                item.id = instance.item.id;
+        }
         instance.item = item;
     }
 

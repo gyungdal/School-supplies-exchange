@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.gyungdal.schooluniform_student.Config;
+import com.gyungdal.schooluniform_student.internet.store.SchoolStore;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -40,6 +41,10 @@ public class Set extends AsyncTask<Void, Void, Config.State> {
                     .data("id", item.id)
                     .method(Connection.Method.GET)
                     .execute();
+            Log.i(TAG, response.url().toString());
+            Log.i(TAG, response.body());
+            if(!response.body().contains("insert"))
+                return Config.State.ERROR;
             if(response.statusCode() != 200)
                 return Config.State.ERROR;
         }catch(Exception e){

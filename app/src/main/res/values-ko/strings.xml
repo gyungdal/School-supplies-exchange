@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Schooluniform_student</string>
+    <string name="app_name">학용품 교환 서비스</string>
     <string name="auto_login">자동로그인</string>
     <string name="city">시</string>
     <string name="confirm">확인</string>

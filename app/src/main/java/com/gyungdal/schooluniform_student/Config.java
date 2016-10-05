@@ -11,9 +11,9 @@ public class Config {
         FAIL_AUTH, //인증 실패
         NOT_FOUND_SCHOOL_DATA //학교 데이터 다운로드 실패
     }
-    public static final String SERVER_URL = "192.168.222.128/gnuboard5/";
+    //public static final String SERVER_URL = "192.168.222.128/gnuboard5/";
     public static final String SERVER_PROTOCAL = "http://";
-    //public static final String SERVER_URL = "gyungdal.xyz/school/";
+    public static final String SERVER_URL = "gyungdal.xyz/school/";
     public static final String LOGIN_PATH = "bbs/login_check.php";
     public static final String SET_SCHOOL_PATH = "set_school.php";
     public static final String GET_SHCOOL_PATH = "get_school.php";

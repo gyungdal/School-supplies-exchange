@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+
         SharedHelper sharedHelper = new SharedHelper(getApplicationContext());
         if (sharedHelper.getValue("auto_login").equals("true")) {
             Intent intent = getIntent();
@@ -81,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
                 shared.setValue("id", id.getText().toString());
                 shared.setValue("pw", pw.getText().toString());
                 shared.setValue("auto_login", autoLogin.isChecked() ? "true" : "false");
-                Login login = new Login(id.getText().toString(), pw.getText().toString());
+                Login login = new Login(id.getText().toString()
+                        , pw.getText().toString(), MainActivity.this);
                 try {
-                    Config.State state = login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+                    Config.State state = login.execute().get();
                     Toast.makeText(MainActivity.this, state.toString(), Toast.LENGTH_SHORT).show();
                     switch (state) {
                         case SUCCESS:
@@ -102,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                         case FAIL_AUTH:
                             break;
 
-                        case NOT_FOUND_SCHOOL_DATA:
+                        case NOT_FOUND_SCHOOL_DATA :
                             startActivity(new Intent(MainActivity.this, SetSchool.class));
                             break;
                     }

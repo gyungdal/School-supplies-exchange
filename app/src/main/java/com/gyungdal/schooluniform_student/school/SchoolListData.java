@@ -2,6 +2,7 @@ package com.gyungdal.schooluniform_student.school;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.gyungdal.schooluniform_student.R;
@@ -45,6 +46,7 @@ public class SchoolListData extends AsyncTask<Void, Void, Void>{
         return instance;
     }
 
+    @NonNull
     @Override
     protected Void doInBackground(Void... voids) {
         if(instance.context == null)
