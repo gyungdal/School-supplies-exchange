@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
-import com.gyungdal.schooluniform_student.activity.board.ArticleList;
+import com.gyungdal.schooluniform_student.activity.board.list.ThreadList;
 import com.gyungdal.schooluniform_student.activity.signup.SignUp;
 import com.gyungdal.schooluniform_student.helper.Permission;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                     switch (state) {
                         case SUCCESS:
                             SchoolStore.getInstance().setId(id.getText().toString());
-                            startActivity(new Intent(MainActivity.this, ArticleList.class));
+                            startActivity(new Intent(MainActivity.this, ThreadList.class));
                             MainActivity.this.finish();
                             break;
 

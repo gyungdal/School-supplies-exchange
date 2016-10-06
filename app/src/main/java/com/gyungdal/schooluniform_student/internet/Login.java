@@ -55,7 +55,7 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         this.progressBar.setMax(5);
         this.publishProgress(0);
     }
-    
+
     @Override
     protected void onPreExecute() {
         progressDialog = new ProgressDialog(context);

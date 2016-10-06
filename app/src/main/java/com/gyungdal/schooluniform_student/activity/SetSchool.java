@@ -43,8 +43,9 @@ public class SetSchool extends AppCompatActivity implements AdapterView.OnItemSe
         getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_set_school);
-        if (getSupportActionBar() != null) {
+        if(getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }
         schoolClass = (EditText) findViewById(R.id.school_class);
         schoolGrade = (EditText) findViewById(R.id.school_grade);

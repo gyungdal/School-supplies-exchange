@@ -26,4 +26,5 @@
     <string name="school_grade">Grade</string>
     <string name="school_class">Class</string>
     <string name="school_number">Number</string>
+    <string name="set_school">Setting School</string>
 </resources>

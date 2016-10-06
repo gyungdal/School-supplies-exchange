@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
-import com.gyungdal.schooluniform_student.activity.board.ArticleList;
+import com.gyungdal.schooluniform_student.activity.board.list.ThreadList;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
 import com.gyungdal.schooluniform_student.internet.Login;
 import com.gyungdal.schooluniform_student.internet.store.SchoolStore;
@@ -48,7 +48,7 @@ public class AutoLoginSplash extends AppCompatActivity {
             switch (state) {
                 case SUCCESS:
                     SchoolStore.getInstance().setId(sharedHelper.getValue("id"));
-                    startActivity(new Intent(AutoLoginSplash.this, ArticleList.class));
+                    startActivity(new Intent(AutoLoginSplash.this, ThreadList.class));
                     AutoLoginSplash.this.finish();
                     break;
 
