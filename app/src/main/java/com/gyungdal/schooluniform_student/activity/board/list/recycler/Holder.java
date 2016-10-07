@@ -15,7 +15,7 @@ import com.gyungdal.schooluniform_student.R;
 public class Holder extends RecyclerView.ViewHolder {
     protected CardView card;
     protected ImageView preview;
-    protected TextView title, author, date, status;
+    protected TextView title, author, date;
     public Holder(View view) {
         super(view);
         card = (CardView)view.findViewById(R.id.card_view);
@@ -23,6 +23,5 @@ public class Holder extends RecyclerView.ViewHolder {
         title = (TextView) view.findViewById(R.id.thread_title);
         author = (TextView) view.findViewById(R.id.thread_author);
         date = (TextView)view.findViewById(R.id.thread_date);
-        status = (TextView)view.findViewById(R.id.thread_status);
     }
 }

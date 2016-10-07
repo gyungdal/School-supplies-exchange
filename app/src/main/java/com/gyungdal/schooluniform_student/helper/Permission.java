@@ -11,14 +11,14 @@ import android.support.v4.content.ContextCompat;
  */
 public class Permission {
     private static int id;
-    public static void request(Context context, String permission){
-            if (ContextCompat.checkSelfPermission(context,
+    public static void request(Activity activity, String permission){
+            if (ContextCompat.checkSelfPermission(activity.getApplication(),
                     permission)
                     != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context,
+                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
                         permission)) {
                 } else {
-                    ActivityCompat.requestPermissions((Activity)context,
+                    ActivityCompat.requestPermissions(activity,
                             new String[]{permission},
                             id++);
                 }

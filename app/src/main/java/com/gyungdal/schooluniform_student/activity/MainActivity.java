@@ -2,6 +2,7 @@ package com.gyungdal.schooluniform_student.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.board.list.ThreadList;
+import com.gyungdal.schooluniform_student.activity.board.upload.UploadThread;
 import com.gyungdal.schooluniform_student.activity.signup.SignUp;
 import com.gyungdal.schooluniform_student.helper.Permission;
 import com.gyungdal.schooluniform_student.helper.SharedHelper;
@@ -39,11 +41,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView signUp;
     private CheckBox autoLogin;
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
 
@@ -115,7 +118,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        Permission.request(getApplicationContext(), Manifest.permission.INTERNET);
+        Permission.request(MainActivity.this, Manifest.permission.INTERNET);
+        Permission.request(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        Permission.request(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+
     }
 
     @Override

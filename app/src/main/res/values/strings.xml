@@ -27,4 +27,6 @@
     <string name="school_class">Class</string>
     <string name="school_number">Number</string>
     <string name="set_school">Setting School</string>
+    <string name="search_hint">Search</string>
+    <string name="upload_page_title">Upload</string>
 </resources>

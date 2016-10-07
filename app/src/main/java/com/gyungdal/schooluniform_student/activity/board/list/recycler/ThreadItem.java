@@ -7,18 +7,17 @@ import android.graphics.Bitmap;
  */
 
 public class ThreadItem {
-    private String date, title, author, url;
+    private String date, title, author, url, previewUrl;
     private boolean status;
-    private Bitmap preview;
 
     public ThreadItem(boolean status, String date, String title
-                        , String author, String url, Bitmap preview){
+                        , String author, String url, String previewUrl){
         this.status = status;
         this.date = date;
         this.title = title;
         this.author = author;
         this.url = url;
-        this.preview = preview;
+        this.previewUrl = previewUrl;
     }
 
     public void setUrl(String url){
@@ -41,8 +40,8 @@ public class ThreadItem {
         this.author = author;
     }
 
-    public void setPreview(Bitmap preview){
-        this.preview = preview;
+    public void setPreviewUrl(String previewUrl){
+        this.previewUrl = previewUrl;
     }
 
     public boolean getStatus(){
@@ -61,8 +60,8 @@ public class ThreadItem {
         return this.author;
     }
 
-    public Bitmap getPreview(){
-        return this.preview;
+    public String getPreviewUrl(){
+        return this.previewUrl;
     }
 
     public String getUrl(){

@@ -22,24 +22,12 @@ public class SchoolListData extends AsyncTask<Void, Void, Void>{
     private Context context;
     private ArrayList<Item> items;
 
-    public SchoolListData(){
-
-    }
-
-    public static void clearItems(){
-        instance.items.clear();
-    }
-
-    public static void setItems(){
-        instance.items = new ArrayList<>(schoolLength);
-        instance.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
     public static void setInstance(Context context){
         Log.i(TAG, "Set instance");
         instance = new SchoolListData();
         instance.items = new ArrayList<>(schoolLength);
         instance.context = context;
+        instance.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public static SchoolListData getInstance(){
