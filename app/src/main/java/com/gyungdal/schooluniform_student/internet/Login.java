@@ -3,6 +3,7 @@ package com.gyungdal.schooluniform_student.internet;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.UiThread;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,12 +31,12 @@ import java.net.URL;
  */
 public class Login extends AsyncTask<String, Integer, Config.State> {
     private static final String TAG = Login.class.getName();
-
     private ProgressDialog progressDialog;
     private ProgressBar progressBar;
     private TextView textView;
     private Context context;
     private String id, pw;
+
 
     public Login(String id, String pw, Context context) {
         this.progressBar = null;
@@ -43,6 +44,15 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         this.context = context;
         this.id = id;
         this.pw = pw;
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMax(5);
+        progressDialog.setMessage("Wait");
+        progressDialog.setTitle("Login");
+        progressDialog.setProgress(0);
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show();
     }
 
     public Login(ProgressBar progressBar, TextView textView, Context context
@@ -52,35 +62,28 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         this.context = context;
         this.id = id;
         this.pw = pw;
-        this.progressBar.setMax(5);
-        this.publishProgress(0);
     }
 
     @Override
     protected void onPreExecute() {
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMax(5);
-        progressDialog.show();
         super.onPreExecute();
     }
     @Override
     protected void onPostExecute(Config.State result) {
-        if(progressDialog != null)
-            progressDialog.dismiss();
         super.onPostExecute(result);
+        progressDialog.dismiss();
     }
 
     @Override
     protected Config.State doInBackground(String... params) {
         try {
-            publishProgress(0);
+            this.publishProgress(0);
             if(!isOnline()) {
                 Log.i(TAG, "Maybe... Server error...");
                 return Config.State.OFFLINE;
             }
             Log.i(TAG, "Start Login");
-                publishProgress(1);
+            this.publishProgress(1);
             String url = Config.SERVER_URL + Config.LOGIN_PATH;
             if(!url.contains(Config.SERVER_PROTOCAL))
                 url = Config.SERVER_PROTOCAL + url;
@@ -95,7 +98,7 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
                 .userAgent(Config.USER_AGENT)
                 .method(Method.POST)
                 .execute();
-            publishProgress(2);
+            this.publishProgress(2);
             Document doc = response.parse();
             Log.i(TAG, doc.toString());
             if(doc.title().contains("오류안내"))
@@ -105,16 +108,16 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
             CookieStore.getInstance().setCookies(response.cookies());
             for( String key : response.cookies().keySet() )
                 Log.i(TAG, String.format("키 : %s, 값 : %s", key, response.cookies().get(key)) );
-                publishProgress(3);
+            this.publishProgress(3);
             SchoolStore.getInstance().setId(id);
             Get get = new Get(id);
-            publishProgress(4);
-            Item result = get.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
+            this.publishProgress(4);
+            Item result = get.execute().get();
             if(result == null) {
                 return Config.State.NOT_FOUND_SCHOOL_DATA;
             }
             SchoolStore.getInstance().setItem(result);
-            publishProgress(5);
+            this.publishProgress(5);
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             return Config.State.ERROR;
@@ -122,11 +125,13 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         return Config.State.SUCCESS;
     }
 
+    @UiThread
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
         if(progressDialog != null){
-            progressDialog.setProgress(values[0]);
+            //progressDialog.setProgress(values[0]);
+            Log.i(TAG, "progress dialog value change : " + values[0]);
             switch (values[0]) {
                 case 0:
                     progressDialog.setMessage(context.getString(R.string.init));
@@ -139,13 +144,13 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
                     break;
                 case 3:
                     progressDialog.setMessage(context.getString(R.string.login_success));
-                    Toast.makeText(context, context.getString(R.string.login_success), Toast.LENGTH_SHORT).show();
                     break;
                 case 4:
                     progressDialog.setMessage(context.getString(R.string.get_school_data_start));
                     break;
                 case 5 :
                     progressDialog.setMessage(context.getString(R.string.get_school_data_done));
+                    progressDialog.dismiss();
                     break;
                 default:
                     Log.wtf(TAG, String.valueOf(values[0]));

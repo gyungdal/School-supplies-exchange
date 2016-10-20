@@ -78,15 +78,16 @@ public class SignUp extends AppCompatActivity {
                         , Toast.LENGTH_SHORT).show();
                 SignUp.this.finish();
             }
-            //TODO : id를 뭐로 했는지 가져오기
             /*if(url.contains(Config.SERVER_URL
                     + Config.REGISTER_PATH.substring(0, Config.REGISTER_PATH.indexOf("/")))) {
-             */   if(url.equals(Config.SERVER_PROTOCAL + Config.SERVER_URL + Config.REGISTER_RESULT_PATH)){
-                    Log.i(TAG, "Catch!!!");
-                    view.loadUrl("javascript:window.Android.getHtml" +
-                            "(document.getElementsById(\"reg_mb_id\")[0].value);");
-                }
-                view.loadUrl(url);
+             */
+            //TODO : 이건 버그리포트를 기다려서 수정해야될 가능성이 있음
+            if(url.equals(Config.SERVER_PROTOCAL + Config.SERVER_URL + Config.REGISTER_RESULT_PATH)){
+                Log.i(TAG, "Catch!!!");
+                view.loadUrl("javascript:window.Android.getHtml" +
+                        "(document.getElementsById(\"reg_mb_id\")[0].value);");
+            }
+            view.loadUrl(url);
             /*} else{
                 Toast.makeText(getApplicationContext()
                         , getString(R.string.wrong_access), Toast.LENGTH_SHORT).show();

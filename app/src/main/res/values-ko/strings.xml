@@ -22,4 +22,14 @@
     <string name="school_grade">학년</string>
     <string name="school_class">반</string>
     <string name="school_number">번호</string>
+    <string name="auto_login_page_title">자동 로그인중....</string>
+    <string name="signup_page_title">회원가입 페이지</string>
+    <string name="upload_page_title">업로드 페이지</string>
+    <string name="school_name">학교 이름</string>
+    <string name="get_school_data_start">학교 데이터 가져오는 중...</string>
+    <string name="get_school_data_done">학교 데이터 설정 끝</string>
+    <string name="get_school_data_fail">학교 데이터 가져오기 실패</string>
+    <string name="init">초기화중...</string>
+    <string name="search_hint">검색</string>
+    <string name="set_school">학교 설정</string>
 </resources>

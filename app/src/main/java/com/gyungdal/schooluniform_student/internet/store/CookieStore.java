@@ -11,6 +11,7 @@ public class CookieStore {
 
     static {
         instance = new CookieStore();
+
     }
 
     public void setCookies(Map<String, String> cookies){

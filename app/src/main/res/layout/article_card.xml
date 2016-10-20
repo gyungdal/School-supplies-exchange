@@ -2,7 +2,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="260dp"
+    android:layout_height="250dp"
     android:layout_margin="5dp"
     card_view:cardCornerRadius="7dp">
 
@@ -19,21 +19,25 @@
             android:scaleType="centerCrop"
             android:background="@android:color/transparent"/>
 
+
         <TextView
-            android:id="@+id/thread_status"
-            android:text="Deal\nEnds"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/thread_date"
+            android:maxLines="3"
+            android:textColor="@android:color/white"
+            android:text="thread_date"
+            android:textSize="10dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/deal_end_textview" />
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:background="@drawable/deal_end_textview"/>
+
 
         <TextView
             android:id="@+id/thread_title"
@@ -44,7 +48,8 @@
             android:text="title"
             android:textColor="#222"
             android:textStyle="bold"
-            android:textSize="22dp" />
+            android:textSize="22dp"
+            android:gravity="center"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,20 +68,6 @@
                 android:text="thread_author"
                 android:textColor="#666"
                 android:textSize="14dp" />
-
-            <View
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/thread_title"
-                android:id="@+id/thread_date"
-                android:maxLines="3"
-                android:text="thread_date"
-                android:textColor="#666"
-                android:textSize="14dp"/>
 
         </LinearLayout>
     </RelativeLayout>

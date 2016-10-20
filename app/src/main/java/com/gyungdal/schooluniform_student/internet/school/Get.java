@@ -42,7 +42,7 @@ public class Get extends AsyncTask<Void, Void, Item> {
             }
             Document doc = response.parse();
             Log.i(TAG, doc.toString());
-            //만약 결과값이 없으면 null 리턴
+            //留뚯빟 寃곌낵媛믪씠 �놁쑝硫� null 由ы꽩
             if(doc.select("#id").get(0).text().trim().isEmpty()) {
                 Log.i(TAG, doc.select("#id").get(0).text().trim());
                 return null;

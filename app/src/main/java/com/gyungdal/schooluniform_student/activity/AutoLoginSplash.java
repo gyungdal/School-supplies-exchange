@@ -38,9 +38,9 @@ public class AutoLoginSplash extends AppCompatActivity {
         setContentView(R.layout.activity_auto_login_splash);
         SharedHelper sharedHelper = new SharedHelper(getApplicationContext());
         Login login = new Login((ProgressBar)findViewById(R.id.loading_progress),
-            (TextView)findViewById(R.id.loading_progress_text),
-            getApplicationContext(),
-            sharedHelper.getValue("id"),
+                (TextView)findViewById(R.id.loading_progress_text),
+                getApplicationContext(),
+                sharedHelper.getValue("id"),
                 sharedHelper.getValue("pw"));
         try {
             Config.State state = login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();

@@ -11,10 +11,10 @@ public class Config {
         FAIL_AUTH, //인증 실패
         NOT_FOUND_SCHOOL_DATA //학교 데이터 다운로드 실패
     }
-
     public static class MENU{
-        public static final int SET_SCHOOL = 0; // 학교설정
+        public static final int SET_SCHOOL = 0;
     }
+
     public static final boolean ARTICLE_SALE = true;
     public static final boolean ARTICLE_SALE_DONE = false;
     //public static final String SERVER_URL = "192.168.222.128/gnuboard5/";
@@ -27,4 +27,5 @@ public class Config {
     public static final String REGISTER_RESULT_PATH = "bbs/register_result.php";
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0)";
     public static final String NICK_NAME_STORE = "NICK_NAME";
+    public static final String BOARD_PATH = "bbs/board.php?bo_table=exchange";
 }

@@ -1,25 +1,19 @@
 package com.gyungdal.schooluniform_student.activity.board.list;
 
-import android.annotation.TargetApi;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Point;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -30,15 +24,25 @@ import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
-import com.gyungdal.schooluniform_student.activity.MainActivity;
 import com.gyungdal.schooluniform_student.activity.SetSchool;
 import com.gyungdal.schooluniform_student.activity.board.list.recycler.Adapter;
 import com.gyungdal.schooluniform_student.activity.board.list.recycler.ThreadItem;
 import com.gyungdal.schooluniform_student.activity.board.upload.UploadThread;
+import com.gyungdal.schooluniform_student.internet.board.getThreadList;
 import com.gyungdal.schooluniform_student.internet.store.ExtraInfoStore;
 import com.gyungdal.schooluniform_student.school.SchoolListData;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import me.everything.android.ui.overscroll.IOverScrollDecor;
+import me.everything.android.ui.overscroll.IOverScrollStateListener;
+import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
+
+import static me.everything.android.ui.overscroll.IOverScrollState.STATE_BOUNCE_BACK;
+import static me.everything.android.ui.overscroll.IOverScrollState.STATE_DRAG_END_SIDE;
+import static me.everything.android.ui.overscroll.IOverScrollState.STATE_DRAG_START_SIDE;
+import static me.everything.android.ui.overscroll.IOverScrollState.STATE_IDLE;
 
 /**
  * Created by GyungDal on 2016-09-08.
@@ -111,12 +115,53 @@ public class ThreadList extends AppCompatActivity{
             return 3;
     }
     private void test(){
-        items.add(new ThreadItem(true, "2016-10-07", "테스트", "GyungDal"
-            , "GyungDal", "http://memozang.com/xe/files/attach/images/123/517/008/57b37b344cfc1cecdc01ebacd99a2d3c.jpg"));
-        items.add(new ThreadItem(true, "2016-10-07", "테스트", "GyungDal"
-                , "GyungDal", "http://memozang.com/xe/files/attach/images/123/517/008/57b37b344cfc1cecdc01ebacd99a2d3c.jpg"));
+        items = new ArrayList<>();
+        getThreadList get = new getThreadList();
+        try {
+            items.addAll(get.execute().get());
+        } catch (Exception e){
+            Log.e(TAG, e.getMessage());
+        }
         threadRecyclerAdapter = new Adapter(items, ThreadList.this);
         threadRecycler.setAdapter(threadRecyclerAdapter);
+        IOverScrollDecor decor = OverScrollDecoratorHelper
+                .setUpOverScroll(threadRecycler, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
+        decor.setOverScrollStateListener(new IOverScrollStateListener() {
+            @Override
+            public void onOverScrollStateChange(IOverScrollDecor decor, int oldState, int newState) {
+                switch (newState) {
+                    case STATE_IDLE:
+                        Log.i(TAG, "THREAD LIST IDLE");
+                        break;
+                    case STATE_DRAG_START_SIDE:
+                        // Dragging started at the left-end.
+                        Log.i(TAG, "THREAD START SIDE");
+                        break;
+                    case STATE_DRAG_END_SIDE:
+                        // Dragging started at the right-end.
+                        Log.i(TAG, "THREAD END SIDE");
+                        break;
+                    case STATE_BOUNCE_BACK:
+                        if (oldState == STATE_DRAG_START_SIDE) {
+                            Log.i(TAG, "THREAD BOUNCE BACK -> START SIDE");
+                            // Dragging stopped -- view is starting to bounce back from the *left-end* onto natural position.
+                        } else { // i.e. (oldState == STATE_DRAG_END_SIDE)
+                            Log.i(TAG, "THREAD BOUNCE BACK -> END SIDE");
+                            Toast.makeText(ThreadList.this, "Get next page...",
+                                    Toast.LENGTH_SHORT).show();
+                            ArrayList<ThreadItem> items = new ArrayList<ThreadItem>();
+                            items.add(new ThreadItem("2016-10-07", "테스트", null,
+                                    "GyungDal", "GyungDal", "http://memozang.com/xe/files/attach/images/123/517/008/57b37b344cfc1cecdc01ebacd99a2d3c.jpg"));
+                            items.add(new ThreadItem("2016-10-07", "테스트", null,
+                                    "GyungDal" , "GyungDal", "http://memozang.com/xe/files/attach/images/123/517/008/57b37b344cfc1cecdc01ebacd99a2d3c.jpg"));
+                            threadRecyclerAdapter.addItems(items);
+                            Log.i(TAG, "" + threadRecyclerAdapter.getItemCount());
+                            // View is starting to bounce back from the *right-end*.
+                        }
+                        break;
+                }
+            }
+        });
     }
 
     private Bitmap colorChange(int mRes){
@@ -125,9 +170,7 @@ public class ThreadList extends AppCompatActivity{
         int sH = bitmap.getHeight();
         int[] pixels = new int[sW*sH];
         bitmap.getPixels(pixels,0,sW,0,0,sW,sH);
-
         for(int i = 0; i<pixels.length; i++){
-
             if(pixels[i] >= 0xf0000000 && pixels[i] <= -1 ){
                 //pixels[i]= Color.parseColor("White");
                 pixels[i] = 0xffffffff;

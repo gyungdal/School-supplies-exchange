@@ -1,31 +1,31 @@
 package com.gyungdal.schooluniform_student.activity.board.list.recycler;
 
-import android.graphics.Bitmap;
+import org.jsoup.nodes.Document;
 
 /**
  * Created by GyungDal on 2016-10-06.
  */
 
 public class ThreadItem {
-    private String date, title, author, url, previewUrl;
-    private boolean status;
+    private String date, title, author ,url, previewUrl;
+    Document doc;
 
-    public ThreadItem(boolean status, String date, String title
+    public ThreadItem(String date, String title, Document doc
                         , String author, String url, String previewUrl){
-        this.status = status;
         this.date = date;
         this.title = title;
         this.author = author;
+        this.doc = doc;
         this.url = url;
         this.previewUrl = previewUrl;
     }
 
-    public void setUrl(String url){
-        this.url = url;
+    public void setDoc(Document doc){
+        this.doc = doc;
     }
 
-    public void setStatus(boolean status){
-        this.status = status;
+    public void setUrl(String url){
+        this.url = url;
     }
 
     public void setDate(String date){
@@ -42,10 +42,6 @@ public class ThreadItem {
 
     public void setPreviewUrl(String previewUrl){
         this.previewUrl = previewUrl;
-    }
-
-    public boolean getStatus(){
-        return this.status;
     }
 
     public String getDate(){
@@ -66,5 +62,9 @@ public class ThreadItem {
 
     public String getUrl(){
         return this.url;
+    }
+
+    public Document getDoc(){
+        return this.doc;
     }
 }

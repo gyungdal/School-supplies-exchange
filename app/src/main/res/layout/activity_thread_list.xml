@@ -29,13 +29,11 @@
             app:floatingSearch_close_search_on_keyboard_dismiss="true"
             />
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/thread_list_recycler"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="?attr/actionBarSize"
+            android:id="@+id/thread_list_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/thread_write"
         android:layout_width="wrap_content"
