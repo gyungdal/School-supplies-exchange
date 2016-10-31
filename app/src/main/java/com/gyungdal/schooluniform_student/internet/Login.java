@@ -31,7 +31,6 @@ import java.net.URL;
  */
 public class Login extends AsyncTask<String, Integer, Config.State> {
     private static final String TAG = Login.class.getName();
-    private ProgressDialog progressDialog;
     private ProgressBar progressBar;
     private TextView textView;
     private Context context;
@@ -44,15 +43,6 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         this.context = context;
         this.id = id;
         this.pw = pw;
-        progressDialog = new ProgressDialog(context);
-        progressDialog.setMax(5);
-        progressDialog.setMessage("Wait");
-        progressDialog.setTitle("Login");
-        progressDialog.setProgress(0);
-        progressDialog.setCancelable(false);
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.show();
     }
 
     public Login(ProgressBar progressBar, TextView textView, Context context
@@ -64,16 +54,7 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
         this.pw = pw;
     }
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-    @Override
-    protected void onPostExecute(Config.State result) {
-        super.onPostExecute(result);
-        progressDialog.dismiss();
-    }
-
+    @SuppressWarnings("WrongThread")
     @Override
     protected Config.State doInBackground(String... params) {
         try {
@@ -112,7 +93,7 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
             SchoolStore.getInstance().setId(id);
             Get get = new Get(id);
             this.publishProgress(4);
-            Item result = get.execute().get();
+            Item result = get.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
             if(result == null) {
                 return Config.State.NOT_FOUND_SCHOOL_DATA;
             }
@@ -129,34 +110,6 @@ public class Login extends AsyncTask<String, Integer, Config.State> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        if(progressDialog != null){
-            //progressDialog.setProgress(values[0]);
-            Log.i(TAG, "progress dialog value change : " + values[0]);
-            switch (values[0]) {
-                case 0:
-                    progressDialog.setMessage(context.getString(R.string.init));
-                    break;
-                case 1:
-                    progressDialog.setMessage(context.getString(R.string.access_login_server));
-                    break;
-                case 2:
-                    progressDialog.setMessage(context.getString(R.string.request_login));
-                    break;
-                case 3:
-                    progressDialog.setMessage(context.getString(R.string.login_success));
-                    break;
-                case 4:
-                    progressDialog.setMessage(context.getString(R.string.get_school_data_start));
-                    break;
-                case 5 :
-                    progressDialog.setMessage(context.getString(R.string.get_school_data_done));
-                    progressDialog.dismiss();
-                    break;
-                default:
-                    Log.wtf(TAG, String.valueOf(values[0]));
-                    break;
-            }
-        }
         if (progressBar != null) {
             progressBar.setProgress(values[0]);
             switch (values[0]) {

@@ -1,21 +1,29 @@
 package com.gyungdal.schooluniform_student.activity.board.detail;
 
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.board.detail.comment.CommentAdapter;
 import com.gyungdal.schooluniform_student.activity.board.detail.comment.CommentItem;
+import com.gyungdal.schooluniform_student.internet.board.writeComment;
 import com.squareup.picasso.Picasso;
 
 import org.jsoup.nodes.Document;
@@ -34,6 +42,8 @@ public class SingleThread extends AppCompatActivity {
     private TextView desc;
     private ImageView image;
     private ListView commentList;
+    private EditText commentText;
+    private Button commentSend;
     private CommentAdapter adapter;
     private String pageUrl, photoUrl;
     private Document doc;
@@ -61,15 +71,57 @@ public class SingleThread extends AppCompatActivity {
         //이미지가 없으면 404 이미지 출력
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_detail_thread);
+
         image = (ImageView) findViewById(R.id.thread_image);
         desc = (TextView) findViewById(R.id.thread_desc);
         commentList = (ListView)findViewById(R.id.comment_list);
+        commentSend = (Button)findViewById(R.id.comment_send);
+        commentText = (EditText) findViewById(R.id.comment_text);
+
+        commentList.smoothScrollToPosition(View.FOCUS_DOWN);
+
+        commentText.setFocusable(false);
+        commentText.setClickable(false);
+        commentText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final AlertDialog.Builder alert = new AlertDialog.Builder(SingleThread.this);
+
+                alert.setTitle("댓글 입력창");
+//                alert.setMessage("댓글을 입력해주세요");
+
+                // Set an EditText view to get user input
+                final EditText input = new EditText(SingleThread.this);
+                alert.setView(input);
+
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        commentText.setText(input.getText().toString());
+                        // Do something with value!
+                    }
+                });
+
+                alert.setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                // Canceled.
+                            }
+                        });
+
+                alert.show();
+            }
+        });
+
         Picasso.with(SingleThread.this)
                 .load(SingleThreadData.photo)
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.error)
                 .into(image);
+
+
         desc.setText(doc.select("#bo_v_con").get(0).text());
+
+
         if(SingleThreadData.doc.toString()
                 .contains("<p id=\"bo_vc_empty\">등록된 댓글이 없습니다.</p>")){
             Log.i(TAG, "NOT FOUND COMMENT");
@@ -80,6 +132,15 @@ public class SingleThread extends AppCompatActivity {
             Toast.makeText(SingleThread.this, "댓글발견", Toast.LENGTH_SHORT).show();
             initComment();
         }
+
+        commentSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String comment = commentText.getText().toString();
+                new writeComment(comment)
+                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
     }
 
     private void initComment(){

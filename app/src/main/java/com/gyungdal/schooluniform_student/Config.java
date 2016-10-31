@@ -28,4 +28,6 @@ public class Config {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0)";
     public static final String NICK_NAME_STORE = "NICK_NAME";
     public static final String BOARD_PATH = "bbs/board.php?bo_table=exchange";
+    public static final String WRITE_PATH = "bbs/write.php?bo_table=exchange";
+    public static final String WRITE_COMMENT_PATH = "bbs/write_comment_update.php";
 }

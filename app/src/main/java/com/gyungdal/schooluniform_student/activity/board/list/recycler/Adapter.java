@@ -73,6 +73,7 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
         this.items.retainAll(items);
         this.notifyDataSetChanged();
     }
+
     private void removeMatchValue(){
         for(int i = 0;i<items.size();i++){
             for(int j = i + 1;j<items.size();j++){
@@ -90,6 +91,7 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
         this.items.add(item);
         removeMatchValue();
     }
+
     public void addItems(ArrayList<ThreadItem> items){
         this.items.addAll(items);
         removeMatchValue();

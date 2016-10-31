@@ -66,10 +66,9 @@ public class MainActivity extends AppCompatActivity {
         login = (Button) findViewById(R.id.login_button);
         signUp = (TextView) findViewById(R.id.sign_up);
         autoLogin = (CheckBox) findViewById(R.id.auto_login);
-        if (SchoolListData.getInstance() == null) {
+        if (SchoolListData.getInstance() == null)
             SchoolListData.setInstance(getApplicationContext());
-            SchoolListData.getInstance().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 Login login = new Login(id.getText().toString()
                         , pw.getText().toString(), MainActivity.this);
                 try {
-                    Config.State state = login.execute().get();
+                    Config.State state = login.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get();
                     Toast.makeText(MainActivity.this, state.toString(), Toast.LENGTH_SHORT).show();
                     switch (state) {
                         case SUCCESS:

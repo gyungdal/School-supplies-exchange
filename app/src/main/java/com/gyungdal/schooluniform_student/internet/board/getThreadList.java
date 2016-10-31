@@ -45,6 +45,7 @@ public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem
             Log.i(TAG, doc.toString());
             Elements tables = doc.select(".tbl_head01 > table:nth-child(1) > tbody:nth-child(3)").select("tr");
             Log.i(TAG, "TABLE NUMBER : " + tables.size());
+            //TODO : 여기서 못가져 오는것으로 추정됨 수정 요망
             for(Element table : tables) {
                 //Element table = tables.get(0);
                 String threadUrl = table.select("a:nth-child(1)").toString();
@@ -61,8 +62,7 @@ public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem
                 Document threadDoc = Jsoup.connect(threadUrl).get();
                 //TODO : 이미지가 없는경우 처리
                 String imageUrl;
-                if(!threadDoc.select(".view_image > img:nth-child(1)")
-                        .get(0).toString().trim().isEmpty()) {
+                if(threadDoc.toString().contains("class=\"view_image\"")) {
                     imageUrl = threadDoc
                             .select(".view_image > img:nth-child(1)")
                             .get(0)
@@ -72,7 +72,7 @@ public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem
                     imageUrl = imageUrl
                             .substring(0, imageUrl.indexOf("\""));
                 } else
-                    imageUrl = "https://weeblr.com/images/products/sh404sef/2015-10-14/medium/joomla-404-error-page.png";
+                    imageUrl = "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg";
 
                 String date = "20" + threadDoc.select("#bo_v_info > strong:nth-child(4)").get(0).text();
                 date = date.substring(0, 4)
@@ -85,6 +85,7 @@ public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem
         }catch(Exception e){
             Log.e(TAG, e.getMessage());
         }
+        Log.d(TAG, "get List Size : " + result.size());
         return result;
     }
 

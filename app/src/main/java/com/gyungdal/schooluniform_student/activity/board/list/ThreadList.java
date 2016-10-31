@@ -118,10 +118,11 @@ public class ThreadList extends AppCompatActivity{
         items = new ArrayList<>();
         getThreadList get = new getThreadList();
         try {
-            items.addAll(get.execute().get());
+            items.addAll(get.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get());
         } catch (Exception e){
             Log.e(TAG, e.getMessage());
         }
+        Log.d(TAG, "ITEM SIZE : " + items.size());
         threadRecyclerAdapter = new Adapter(items, ThreadList.this);
         threadRecycler.setAdapter(threadRecyclerAdapter);
         IOverScrollDecor decor = OverScrollDecoratorHelper

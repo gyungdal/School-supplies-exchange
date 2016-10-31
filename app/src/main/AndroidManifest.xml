@@ -16,6 +16,10 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".activity.SetSchool"
             android:label="@string/set_school"/>
@@ -25,10 +29,6 @@
         <activity android:name=".activity.board.list.ThreadList"
             android:theme="@style/AppTheme.NoActionBar">
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".activity.AutoLoginSplash"
             android:label="@string/auto_login_page_title"/>
