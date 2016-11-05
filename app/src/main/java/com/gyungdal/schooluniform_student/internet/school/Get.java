@@ -28,7 +28,7 @@ public class Get extends AsyncTask<Void, Void, Item> {
     protected Item doInBackground(Void... params) {
         Item result = new Item();
         try{
-            String url = Config.SERVER_URL + Config.GET_SHCOOL_PATH;
+            String url = Config.SERVER_URL + Config.GET_SCHOOL_PATH;
             if(!url.contains(Config.SERVER_PROTOCAL))
                 url = Config.SERVER_PROTOCAL + url;
             Log.i(TAG, url);
@@ -42,7 +42,7 @@ public class Get extends AsyncTask<Void, Void, Item> {
             }
             Document doc = response.parse();
             Log.i(TAG, doc.toString());
-            //留뚯빟 寃곌낵媛믪씠 �놁쑝硫� null 由ы꽩
+
             if(doc.select("#id").get(0).text().trim().isEmpty()) {
                 Log.i(TAG, doc.select("#id").get(0).text().trim());
                 return null;

@@ -22,7 +22,7 @@ public class Config {
     public static final String SERVER_URL = "gyungdal.xyz/school/";
     public static final String LOGIN_PATH = "bbs/login_check.php";
     public static final String SET_SCHOOL_PATH = "set_school.php";
-    public static final String GET_SHCOOL_PATH = "get_school.php";
+    public static final String GET_SCHOOL_PATH = "get_school.php";
     public static final String REGISTER_PATH = "bbs/register.php";
     public static final String REGISTER_RESULT_PATH = "bbs/register_result.php";
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0)";
@@ -30,4 +30,5 @@ public class Config {
     public static final String BOARD_PATH = "bbs/board.php?bo_table=exchange";
     public static final String WRITE_PATH = "bbs/write.php?bo_table=exchange";
     public static final String WRITE_COMMENT_PATH = "bbs/write_comment_update.php";
+    public static final String SEARCH_PARAMS = "&sca=&sop=and&sfl=wr_subject||wr_content&stx=";
 }

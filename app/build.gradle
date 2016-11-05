@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    buildToolsVersion '24.0.3'
 
     defaultConfig {
         applicationId "com.gyungdal.schooluniform_student"
@@ -17,6 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    useLibrary 'org.apache.http.legacy'
 }
 
 
@@ -32,10 +33,13 @@ dependencies {
     compile 'org.jsoup:jsoup:1.9.2'
     //Image Load library
     compile 'com.squareup.picasso:picasso:2.5.2'
+
+    //이건 뭐더라
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
+
     //Over Scroll View
     compile 'me.everything:overscroll-decor-android:1.0.3'
 
-    //Mulitpart
+    //Multipart
     compile 'com.loopj.android:android-async-http:1.4.9'
 }

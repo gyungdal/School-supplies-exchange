@@ -66,9 +66,9 @@ public class getWriteInformation
             printAll(result);
             return result;
         }catch(Exception e){
-            Log.e(TAG, e.getMessage());
+                Log.e(TAG, e.getMessage());
+            return null;
         }
-        return null;
     }
 
     private String getValue(String value){

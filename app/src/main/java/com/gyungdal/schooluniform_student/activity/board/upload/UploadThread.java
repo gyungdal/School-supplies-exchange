@@ -227,7 +227,7 @@ public class UploadThread extends AppCompatActivity
                 String uploadTitle = title.getText().toString();
                 Log.i(TAG, "TITLE : " + uploadTitle);
                 Log.i(TAG, "DESC : " + uploadDesc);
-                writeThread upload = new writeThread(uploadTitle, photo, uploadDesc);
+                writeThread upload = new writeThread(UploadThread.this, uploadTitle, photo, uploadDesc);
                 upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 Toast.makeText(UploadThread.this, "업로드 중", Toast.LENGTH_SHORT).show();
                 UploadThread.this.finish();

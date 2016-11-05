@@ -28,6 +28,7 @@ import com.gyungdal.schooluniform_student.activity.SetSchool;
 import com.gyungdal.schooluniform_student.activity.board.list.recycler.Adapter;
 import com.gyungdal.schooluniform_student.activity.board.list.recycler.ThreadItem;
 import com.gyungdal.schooluniform_student.activity.board.upload.UploadThread;
+import com.gyungdal.schooluniform_student.internet.board.SearchThread;
 import com.gyungdal.schooluniform_student.internet.board.getThreadList;
 import com.gyungdal.schooluniform_student.internet.store.ExtraInfoStore;
 import com.gyungdal.schooluniform_student.school.SchoolListData;
@@ -54,6 +55,7 @@ public class ThreadList extends AppCompatActivity{
     private RecyclerView threadRecycler;
     private Adapter threadRecyclerAdapter;
     private ArrayList<ThreadItem> items;
+    private int no;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +69,7 @@ public class ThreadList extends AppCompatActivity{
         getWindow().setTitle(ExtraInfoStore.getInstance().getValue(Config.NICK_NAME_STORE));
 
         items = new ArrayList<>();
+        no = 1;
         threadRecycler = (RecyclerView) findViewById(R.id.thread_list_recycler);
         fab = (FloatingActionButton) findViewById(R.id.thread_write);
         search = (FloatingSearchView) findViewById(R.id.thread_search);
@@ -90,9 +93,11 @@ public class ThreadList extends AppCompatActivity{
 
             @Override
             public void onSearchAction(String currentQuery) {
+                search(currentQuery);
                 Log.i(TAG, search.getQuery());
             }
         });
+
         search.setOnMenuItemClickListener(new FloatingSearchView.OnMenuItemClickListener() {
             @Override
             public void onActionMenuItemSelected(MenuItem item) {
@@ -101,6 +106,7 @@ public class ThreadList extends AppCompatActivity{
                         startActivity(new Intent(ThreadList.this, SetSchool.class));
                         break;
                 }
+
             }
         });
     }
@@ -114,6 +120,46 @@ public class ThreadList extends AppCompatActivity{
         else
             return 3;
     }
+
+    private void search(String text){
+        items = new ArrayList<>();
+        SearchThread get = new SearchThread(text);
+        try {
+            items.addAll(get.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get());
+        } catch (Exception e){
+            Log.e(TAG, e.getMessage());
+        }
+        Log.d(TAG, "ITEM SIZE : " + items.size());
+        threadRecyclerAdapter.deleteItems();
+        threadRecyclerAdapter.addItems(items);
+    }
+
+    private void readNextPage(){
+        items = new ArrayList<>();
+        getThreadList get = new getThreadList(++no);
+        try{
+            items.addAll(get.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get());
+        }catch(Exception e){
+            Log.e(TAG, e.getMessage());
+            --no;
+            return;
+        }
+        threadRecyclerAdapter.addItems(items);
+        Log.d(TAG, "ITEM SIZE : " + items.size());
+    }
+    private void searchToNormal(){
+        items = new ArrayList<>();
+        getThreadList get = new getThreadList();
+        try {
+            items.addAll(get.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR).get());
+        } catch (Exception e){
+            Log.e(TAG, e.getMessage());
+        }
+        threadRecyclerAdapter.deleteItems();
+        threadRecyclerAdapter.addItems(items);
+        Log.d(TAG, "ITEM SIZE : " + items.size());
+    }
+
     private void test(){
         items = new ArrayList<>();
         getThreadList get = new getThreadList();
@@ -145,18 +191,12 @@ public class ThreadList extends AppCompatActivity{
                     case STATE_BOUNCE_BACK:
                         if (oldState == STATE_DRAG_START_SIDE) {
                             Log.i(TAG, "THREAD BOUNCE BACK -> START SIDE");
-                            // Dragging stopped -- view is starting to bounce back from the *left-end* onto natural position.
+                            searchToNormal();
                         } else { // i.e. (oldState == STATE_DRAG_END_SIDE)
                             Log.i(TAG, "THREAD BOUNCE BACK -> END SIDE");
                             Toast.makeText(ThreadList.this, "Get next page...",
                                     Toast.LENGTH_SHORT).show();
-                            ArrayList<ThreadItem> items = new ArrayList<ThreadItem>();
-                            items.add(new ThreadItem("2016-10-07", "테스트", null,
-                                    "GyungDal", "GyungDal", "http://memozang.com/xe/files/attach/images/123/517/008/57b37b344cfc1cecdc01ebacd99a2d3c.jpg"));
-                            items.add(new ThreadItem("2016-10-07", "테스트", null,
-                                    "GyungDal" , "GyungDal", "http://memozang.com/xe/files/attach/images/123/517/008/57b37b344cfc1cecdc01ebacd99a2d3c.jpg"));
-                            threadRecyclerAdapter.addItems(items);
-                            Log.i(TAG, "" + threadRecyclerAdapter.getItemCount());
+                            readNextPage();
                             // View is starting to bounce back from the *right-end*.
                         }
                         break;
@@ -181,8 +221,7 @@ public class ThreadList extends AppCompatActivity{
             if((pixels[i] & 0xff) != 0xff)
                 pixels[i] = 0x00000000;
         }
-        Bitmap b  = Bitmap.createBitmap(pixels, 0, sW, sW, sH,
+        return Bitmap.createBitmap(pixels, 0, sW, sW, sH,
                 Bitmap.Config.ARGB_8888);
-        return b;
     }
 }

@@ -1,7 +1,15 @@
 package com.gyungdal.schooluniform_student.activity.board.list.recycler;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
@@ -44,13 +52,21 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
         holder.title.setText(items.get(position).getTitle());
         holder.author.setText(items.get(position).getAuthor());
         holder.date.setText(items.get(position).getDate());
-        Picasso.with(context).load(items.get(position).getPreviewUrl())
-            .fit()
-            .placeholder(R.drawable.loading_image)
-            .fit()
-            .error(R.drawable.error)
-            .fit()
-            .into(holder.preview);
+        if(items.get(position).getPreviewUrl() != null)
+            Picasso.with(context)
+                .load(items.get(position).getPreviewUrl())
+                .fit()
+                .placeholder(createImage(
+                        Color.WHITE,
+                        "Loding..."
+                        ))
+                .fit()
+                .into(holder.preview);
+        else
+            holder.preview.setImageDrawable(createImage(
+                    Color.WHITE,
+                    "NOT IMAGE"
+            ));
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +90,10 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
         this.notifyDataSetChanged();
     }
 
+    public void deleteItems(){
+        this.items.clear();
+    }
+
     private void removeMatchValue(){
         for(int i = 0;i<items.size();i++){
             for(int j = i + 1;j<items.size();j++){
@@ -95,6 +115,21 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
     public void addItems(ArrayList<ThreadItem> items){
         this.items.addAll(items);
         removeMatchValue();
+    }
+
+    private Drawable createImage(int color, String name) {
+        int width = 400, height = 400;
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Paint paint2 = new Paint();
+        paint2.setColor(color);
+        canvas.drawRect(0F, 0F, (float) width, (float) height, paint2);
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(72);
+        paint.setTextScaleX(1);
+        canvas.drawText(name, 75 - 25, 75 + 20, paint);
+        return new BitmapDrawable(context.getResources(), bitmap);
     }
 
 }

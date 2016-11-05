@@ -12,31 +12,31 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * Created by GyungDal on 2016-10-08.
+ * Created by GyungDal on 2016-11-04.
  */
 
-public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem>> {
-    private static final String TAG = getThreadList.class.getName();
+public class SearchThread extends AsyncTask<Void, Integer, ArrayList<ThreadItem>> {
+    private static final String TAG = SearchThread.class.getName();
     private ArrayList<ThreadItem> result;
     private static int no = 1;
+    private String text;
 
-    public getThreadList(){
+    public SearchThread(){
         result = new ArrayList<>();
     }
 
-    public getThreadList(int no){
+    public SearchThread(String text){
         result = new ArrayList<>();
-        this.no = no;
+        this.text = text;
     }
 
     @Override
     protected ArrayList<ThreadItem> doInBackground(Void... params) {
         String path = Config.SERVER_PROTOCAL
-                + Config.SERVER_URL + Config.BOARD_PATH;
+                + Config.SERVER_URL + Config.BOARD_PATH
+                + Config.SEARCH_PARAMS + text;
         try {
             Log.i(TAG, "PATH : " + path);
             Document doc = Jsoup
@@ -82,6 +82,7 @@ public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem
                         + "\n" + date.substring(5,10)
                         + "\n" + date.substring(11);
                 ThreadItem temp = new ThreadItem(date, title, threadDoc, writer, threadUrl, imageUrl);
+                printThread(temp);
                 Log.i(TAG, temp.toString());
                 result.add(temp);
             }
@@ -92,4 +93,10 @@ public class getThreadList extends AsyncTask<Void, Integer, ArrayList<ThreadItem
         return result;
     }
 
+    private void printThread(ThreadItem item){
+        Log.i(TAG, item.getTitle());
+        Log.i(TAG, item.getAuthor());
+        Log.i(TAG, item.getPreviewUrl());
+        Log.i(TAG, item.getDoc().toString());
+    }
 }

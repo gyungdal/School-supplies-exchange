@@ -81,12 +81,6 @@ public class SignUp extends AppCompatActivity {
             /*if(url.contains(Config.SERVER_URL
                     + Config.REGISTER_PATH.substring(0, Config.REGISTER_PATH.indexOf("/")))) {
              */
-            //TODO : 이건 버그리포트를 기다려서 수정해야될 가능성이 있음
-            if(url.equals(Config.SERVER_PROTOCAL + Config.SERVER_URL + Config.REGISTER_RESULT_PATH)){
-                Log.i(TAG, "Catch!!!");
-                view.loadUrl("javascript:window.Android.getHtml" +
-                        "(document.getElementsById(\"reg_mb_id\")[0].value);");
-            }
             view.loadUrl(url);
             /*} else{
                 Toast.makeText(getApplicationContext()
