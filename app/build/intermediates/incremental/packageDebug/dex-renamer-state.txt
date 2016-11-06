@@ -1,0 +1,7 @@
+#Mon Nov 07 00:18:22 KST 2016
+base.0=D\:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_e64741112ed05dc176674f9da62d3d2dc742a240
+renamed.1=classes2.dex
+renamed.0=classes.dex
+file.1=D\:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_4a4cd79f5dce95dbd2f6c9e751f01845c2023cd7\\classes.dex
+base.1=D\:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run_4a4cd79f5dce95dbd2f6c9e751f01845c2023cd7
+file.0=D\:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10\\instant-run-bootstrap_e64741112ed05dc176674f9da62d3d2dc742a240\\classes.dex

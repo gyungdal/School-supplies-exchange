@@ -137,7 +137,7 @@ public class SingleThread extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String comment = commentText.getText().toString();
-                new writeComment(comment)
+                new writeComment(SingleThreadData.url, comment, SingleThread.this)
                         .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });

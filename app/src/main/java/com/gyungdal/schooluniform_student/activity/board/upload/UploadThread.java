@@ -1,7 +1,9 @@
 package com.gyungdal.schooluniform_student.activity.board.upload;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ContentValues;
@@ -25,6 +27,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -33,9 +42,11 @@ import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.SetSchool;
 import com.gyungdal.schooluniform_student.activity.board.detail.SingleThread;
+import com.gyungdal.schooluniform_student.activity.board.detail.SingleThreadData;
 import com.gyungdal.schooluniform_student.activity.board.list.ThreadList;
 import com.gyungdal.schooluniform_student.helper.Permission;
 import com.gyungdal.schooluniform_student.internet.board.writeThread;
+import com.gyungdal.schooluniform_student.internet.store.CookieStore;
 import com.squareup.picasso.Picasso;
 
 import java.io.BufferedOutputStream;
@@ -44,26 +55,29 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.security.Provider;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 /**
  * Created by GyungDal on 2016-10-06.
  */
 
-public class UploadThread extends AppCompatActivity
-        implements View.OnClickListener {
+public class UploadThread extends AppCompatActivity {
     private static final String TAG = UploadThread.class.getName();
-    private static final int PICK_FROM_CAMERA = 0;
-    private static final int PICK_FROM_ALBUM = 1;
-    private static final int CROP_FROM_IMAGE = 2;
+    private WebView webView;
 
-    private FloatingActionButton upload;
-    private EditText desc, title;
-    private ImageView image;
-    private Bitmap photo;
-    private Uri captureUri;
-    private String filePath;
+    public static final int INPUT_FILE_REQUEST_CODE = 1;
+    public static final String EXTRA_FROM_NOTIFICATION = "EXTRA_FROM_NOTIFICATION";
 
+    private WebView mWebView;
+    private ValueCallback<Uri[]> mFilePathCallback;
+    private String mCameraPhotoPath;
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,19 +88,192 @@ public class UploadThread extends AppCompatActivity
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
         }
+        CookieSyncManager.createInstance(UploadThread.this);
+        CookieSyncManager.getInstance().startSync();
+        CookieManager.getInstance().setAcceptCookie(true);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_upload_thread);
-        image = (ImageView) findViewById(R.id.thread_upload_image);
-        image.setOnClickListener(UploadThread.this);
-        title = (EditText) findViewById(R.id.thread_upload_title);
-        desc = (EditText)findViewById(R.id.thread_upload_desc);
-        upload = (FloatingActionButton) findViewById(R.id.thread_write);
-        upload.setOnClickListener(UploadThread.this);
+        webView = (WebView)findViewById(R.id.upload_thread_web);
+        webView.getSettings().setAllowContentAccess(true);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setDatabaseEnabled(true);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setSaveFormData(true);
+        webView.getSettings().setSupportMultipleWindows(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        webView.getSettings().setDatabaseEnabled(true);
+        webView.getSettings().setDomStorageEnabled(true);
 
-        Permission.request(UploadThread.this, Manifest.permission.CAMERA);
-        Permission.request(UploadThread.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        webView.setWebChromeClient(new WebChromeClient() {
+            public boolean onShowFileChooser(
+                    WebView webView, ValueCallback<Uri[]> filePathCallback,
+                    WebChromeClient.FileChooserParams fileChooserParams) {
+                if(mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                }
+                mFilePathCallback = filePathCallback;
+
+                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity( getPackageManager()) != null) {
+                    // Create the File where the photo should go
+                    File photoFile = null;
+                    try {
+                        photoFile = createImageFile();
+                        takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath);
+                    } catch (IOException ex) {
+                        // Error occurred while creating the File
+                        Log.e(TAG, "Unable to create Image File", ex);
+                    }
+
+                    // Continue only if the File was successfully created
+                    if (photoFile != null) {
+                        mCameraPhotoPath = "file:" + photoFile.getAbsolutePath();
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                                Uri.fromFile(photoFile));
+                    } else {
+                        takePictureIntent = null;
+                    }
+                }
+
+                Intent contentSelectionIntent = new Intent(Intent.ACTION_GET_CONTENT);
+                contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE);
+                contentSelectionIntent.setType("image/*");
+
+                Intent[] intentArray;
+                if(takePictureIntent != null) {
+                    intentArray = new Intent[]{takePictureIntent};
+                } else {
+                    intentArray = new Intent[0];
+                }
+
+                Intent chooserIntent = new Intent(Intent.ACTION_CHOOSER);
+                chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
+                chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
+                chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
+
+                startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE);
+
+                return true;
+            }
+        });
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+            webView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        Map<String, String> extraHeaders = new HashMap<String, String>();
+        extraHeaders.put("User-Agent", Config.USER_AGENT);
+        CookieManager.getInstance().setCookie("http://gyungdal.xyz/school/bbs/write.php?bo_table=exchange&device=mobile", getCookie());
+        webView.setWebViewClient(new client());
+        webView.loadUrl("http://gyungdal.xyz/school/bbs/write.php?bo_table=exchange&device=mobile", extraHeaders);
     }
 
+    /**
+     * More info this method can be found at
+     * http://developer.android.com/training/camera/photobasics.html
+     *
+     * @return
+     * @throws IOException
+     */
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File imageFile = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        return imageFile;
+    }
+
+    /**
+     * Convenience method to set some generic defaults for a
+     * given WebView
+     *
+     * @param webView
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void setUpWebViewDefaults(WebView webView) {
+        WebSettings settings = webView.getSettings();
+
+        // Enable Javascript
+        settings.setJavaScriptEnabled(true);
+
+        // Use WideViewport and Zoom out if there is no viewport defined
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+
+        // Enable pinch to zoom without the zoom buttons
+        settings.setBuiltInZoomControls(true);
+
+        if(Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
+            // Hide the zoom controls for HONEYCOMB+
+            settings.setDisplayZoomControls(false);
+        }
+
+        // Enable remote debugging via chrome://inspect
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
+
+        // We set the WebViewClient to ensure links are consumed by the WebView rather
+        // than passed to a browser if it can
+        mWebView.setWebViewClient(new WebViewClient());
+    }
+
+    @Override
+    public void onActivityResult (int requestCode, int resultCode, Intent data) {
+        if(requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
+            super.onActivityResult(requestCode, resultCode, data);
+            return;
+        }
+
+        Uri[] results = null;
+
+        // Check that the response is a good one
+        if(resultCode == Activity.RESULT_OK) {
+            if(data == null) {
+                // If there is not data, then we may have taken a photo
+                if(mCameraPhotoPath != null) {
+                    results = new Uri[]{Uri.parse(mCameraPhotoPath)};
+                }
+            } else {
+                String dataString = data.getDataString();
+                if (dataString != null) {
+                    results = new Uri[]{Uri.parse(dataString)};
+                }
+            }
+        }
+
+        mFilePathCallback.onReceiveValue(results);
+        mFilePathCallback = null;
+        return;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        CookieSyncManager.getInstance().startSync();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        CookieSyncManager.getInstance().stopSync();
+    }
+
+    private String getCookie(){
+        String cookie = "";
+        for (Object aKey : CookieStore.getInstance().getCookies().keySet()) {
+            String name = (String) aKey;
+            String value = CookieStore.getInstance().getCookies().get(name);
+            Log.i(TAG, "name : " + name);
+            Log.i(TAG, "value : " + value);
+            cookie += name + "=" + value + ";";
+        }
+        return cookie;
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //getMenuInflater().inflate(R.menu.main, menu);
@@ -99,172 +286,17 @@ public class UploadThread extends AppCompatActivity
         return super.onPrepareOptionsMenu(menu);
     }
 
-    private void storeImage(Bitmap bitmap, String filePath) {
-        File copyFile = new File(filePath.substring(0, filePath.lastIndexOf(File.separator)));
-        if(!copyFile.exists())
-            copyFile.mkdirs();
-        copyFile = new File(filePath);
-
-        BufferedOutputStream out = null;
-        try {
-            copyFile.createNewFile();
-            out = new BufferedOutputStream(new FileOutputStream(copyFile));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-
-            out.flush();
-            out.close();
-            addImageToGallery(copyFile.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void addImageToGallery(final String filePath) {
-        final Context context = UploadThread.this;
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
-        values.put(MediaStore.MediaColumns.DATA, filePath);
-        context.getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            case Config.MENU.SET_SCHOOL :
-                startActivity(new Intent(UploadThread.this, SetSchool.class));
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    //사진 촬영
-    private void takePhoto(){
-        Permission.request(UploadThread.this, Manifest.permission.CAMERA);
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //임시 사용 파일 경로 생성
-
-        startActivityForResult(intent, PICK_FROM_CAMERA);
-    }
-
-    //앨범에서 고르기
-    private void takeAlbum(){
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-        startActivityForResult(intent, PICK_FROM_ALBUM);
-    }
-
-    @Override
-    public void onActivityResult(int request, int result, Intent data){
-        super.onActivityResult(request, result, data);
-        if(result != RESULT_OK) {
-            Log.wtf(TAG, "request : " + request + ", result : " + result);
-            return;
-        }
-        switch(request){
-            case PICK_FROM_ALBUM :
-            case PICK_FROM_CAMERA : {
-
-                captureUri = data.getData();
-                Log.i(TAG, "select : " + captureUri.getPath());
-                Intent intent = new Intent("com.android.camera.action.CROP");
-                intent.setDataAndType(captureUri, "image/*");
-
-                Log.i(TAG, filePath);
-/*
-                photo =  (Bitmap) data.getExtras().get("data");
-                storeImage(photo, filePath);
-                Picasso.with(UploadThread.this)
-                        .load(Uri.fromFile(new File(filePath)))
-                        .fit()
-                        .into(image);*/
-                startActivityForResult(intent, CROP_FROM_IMAGE);
-                break;
-            }
-            case CROP_FROM_IMAGE : {
-                Log.i(TAG, "DONE CROP IMAGE");
-                //잘린 이미지 넘겨 받음
-                Log.i(TAG, data.getData() != null ? "Return success" : "Return Fail");
-                if (data.getData() != null) {
-                    captureUri = data.getData();
-                    //storeImage(photo, filePath);
-
-                    Log.i(TAG, filePath);
-                    Picasso.with(UploadThread.this)
-                            .load(captureUri)
-                            .fit()
-                            .into(image);
-
-                    try{
-                        photo = Picasso.with(UploadThread.this)
-                                .load(data.getData())
-                                .get();
-                        //storeImage(photo, filePath);
-                    }catch(Exception e){
-                        Log.e(TAG, e.getMessage());
-                    }
-                    //image.setImageBitmap(photo);
-                    //image.setImageBitmap(photo);
-                    //image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                }
-                break;
-            }
-            default :
-
-                break;
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.thread_write : {
-                String uploadDesc = desc.getText().toString();
-                String uploadTitle = title.getText().toString();
-                Log.i(TAG, "TITLE : " + uploadTitle);
-                Log.i(TAG, "DESC : " + uploadDesc);
-                writeThread upload = new writeThread(UploadThread.this, uploadTitle, photo, uploadDesc);
-                upload.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                Toast.makeText(UploadThread.this, "업로드 중", Toast.LENGTH_SHORT).show();
+    class client extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            CookieSyncManager.getInstance().sync();
+            if(url.contains("write")){
+                view.loadUrl(url);
+            }else if(url.contains("board")){
+                Toast.makeText(UploadThread.this, "UPLOADING", Toast.LENGTH_SHORT).show();
                 UploadThread.this.finish();
-                break;
             }
-            case R.id.thread_upload_image : { //임시값
-                DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        takePhoto();
-                    }
-                };
-
-                DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        takeAlbum();
-                    }
-                };
-
-                DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener(){
-                    @Override
-                    public void onClick(DialogInterface dialog, int which){
-                        dialog.dismiss();
-                    }
-                };
-
-                filePath = Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + File.separator + "SchoolExchange" + File.separator
-                        + System.currentTimeMillis() + ".jpg";
-                new AlertDialog.Builder(UploadThread.this)
-                        .setTitle("업로드 사진 선택")
-                        .setPositiveButton("사진 촬영", cameraListener)
-                        .setNeutralButton("앨범에서 선택", albumListener)
-                        .setNegativeButton("취소", cancelListener)
-                        .show();
-            }
+            return true;
         }
     }
 }

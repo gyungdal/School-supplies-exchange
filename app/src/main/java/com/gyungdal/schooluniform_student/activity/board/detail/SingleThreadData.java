@@ -11,5 +11,4 @@ import java.io.Serializable;
 public class SingleThreadData implements Serializable {
     public static String url, title, photo;
     public static Document doc;
-
 }
