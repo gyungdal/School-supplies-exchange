@@ -1,6 +1,6 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:2:1-43:12
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:2:1-46:12
 	package
 		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:3:5-49
 		INJECTED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml
@@ -30,7 +30,7 @@ ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml
 	android:name
 		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:7:22-62
 application
-ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:8:5-42:19
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:8:5-45:19
 MERGED from [com.github.arimorty:floatingsearchview:2.0.3] D:\Android\APP\Schooluniform_student\app\build\intermediates\exploded-aar\com.github.arimorty\floatingsearchview\2.0.3\AndroidManifest.xml:12:5-20
 MERGED from [com.android.support:support-v4:24.2.0] D:\Android\APP\Schooluniform_student\app\build\intermediates\exploded-aar\com.android.support\support-v4\24.2.0\AndroidManifest.xml:25:5-20
 MERGED from [com.android.support:support-compat:24.2.1] D:\Android\APP\Schooluniform_student\app\build\intermediates\exploded-aar\com.android.support\support-compat\24.2.1\AndroidManifest.xml:25:5-20
@@ -83,30 +83,36 @@ ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml
 		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:27:13-54
 	android:name
 		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:26:19-57
-activity#com.gyungdal.schooluniform_student.activity.board.list.ThreadList
-ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:29:9-32:20
-	android:theme
+activity#com.gyungdal.schooluniform_student.internet.board.uploadComment
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:29:9-30:58
+	android:label
 		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:30:13-56
 	android:name
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:29:19-65
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:29:19-63
+activity#com.gyungdal.schooluniform_student.activity.board.list.ThreadList
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:32:9-35:20
+	android:theme
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:33:13-56
+	android:name
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:32:19-65
 activity#com.gyungdal.schooluniform_student.activity.AutoLoginSplash
-ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:33:9-34:60
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:36:9-37:60
 	android:label
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:34:13-58
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:37:13-58
 	android:name
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:33:19-59
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:36:19-59
 activity#com.gyungdal.schooluniform_student.activity.board.detail.SingleThread
-ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:36:9-37:35
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:39:9-40:35
 	android:label
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:37:13-33
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:40:13-33
 	android:name
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:36:19-69
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:39:19-69
 activity#com.gyungdal.schooluniform_student.activity.board.upload.UploadThread
-ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:38:9-40:20
+ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:41:9-43:20
 	android:label
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:39:13-54
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:42:13-54
 	android:name
-		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:38:19-69
+		ADDED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml:41:19-69
 uses-sdk
 INJECTED from D:\Android\APP\Schooluniform_student\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.github.arimorty:floatingsearchview:2.0.3] D:\Android\APP\Schooluniform_student\app\build\intermediates\exploded-aar\com.github.arimorty\floatingsearchview\2.0.3\AndroidManifest.xml:8:5-10:41

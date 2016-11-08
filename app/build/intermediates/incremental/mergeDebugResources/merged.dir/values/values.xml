@@ -6213,6 +6213,7 @@
     <string name="signup_page_title">Sign up</string>
     <string name="state">State</string>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <string name="upload_comment_page">Upload comment…</string>
     <string name="upload_page_title">Upload</string>
     <string name="wrong_access">Wrong access, restart process</string>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>

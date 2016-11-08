@@ -12,6 +12,7 @@ public class SchoolStore {
     private static final String TAG = SchoolStore.class.getName();
     private static final SchoolStore instance;
     private Item item;
+
     static {
         instance = new SchoolStore();
         instance.item = new Item();

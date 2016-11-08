@@ -1,32 +1,19 @@
 package com.gyungdal.schooluniform_student.activity.board.upload;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.webkit.ValueCallback;
@@ -34,34 +21,18 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
-import com.gyungdal.schooluniform_student.activity.SetSchool;
-import com.gyungdal.schooluniform_student.activity.board.detail.SingleThread;
-import com.gyungdal.schooluniform_student.activity.board.detail.SingleThreadData;
-import com.gyungdal.schooluniform_student.activity.board.list.ThreadList;
-import com.gyungdal.schooluniform_student.helper.Permission;
-import com.gyungdal.schooluniform_student.internet.board.writeThread;
 import com.gyungdal.schooluniform_student.internet.store.CookieStore;
-import com.squareup.picasso.Picasso;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.security.Provider;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import cz.msebera.android.httpclient.impl.cookie.BasicClientCookie;
 
 /**
  * Created by GyungDal on 2016-10-06.
@@ -74,7 +45,6 @@ public class UploadThread extends AppCompatActivity {
     public static final int INPUT_FILE_REQUEST_CODE = 1;
     public static final String EXTRA_FROM_NOTIFICATION = "EXTRA_FROM_NOTIFICATION";
 
-    private WebView mWebView;
     private ValueCallback<Uri[]> mFilePathCallback;
     private String mCameraPhotoPath;
     @SuppressLint("SetJavaScriptEnabled")
@@ -219,7 +189,7 @@ public class UploadThread extends AppCompatActivity {
 
         // We set the WebViewClient to ensure links are consumed by the WebView rather
         // than passed to a browser if it can
-        mWebView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient());
     }
 
     @Override

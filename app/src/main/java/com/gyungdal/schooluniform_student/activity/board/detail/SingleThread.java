@@ -1,8 +1,8 @@
 package com.gyungdal.schooluniform_student.activity.board.detail;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -16,20 +16,23 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyungdal.schooluniform_student.Config;
 import com.gyungdal.schooluniform_student.R;
 import com.gyungdal.schooluniform_student.activity.board.detail.comment.CommentAdapter;
 import com.gyungdal.schooluniform_student.activity.board.detail.comment.CommentItem;
-import com.gyungdal.schooluniform_student.internet.board.writeComment;
+import com.gyungdal.schooluniform_student.internet.board.uploadComment;
+import com.gyungdal.schooluniform_student.internet.store.ExtraInfoStore;
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -137,11 +140,25 @@ public class SingleThread extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String comment = commentText.getText().toString();
-                new writeComment(SingleThreadData.url, comment, SingleThread.this)
-                        .executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                Intent i = new Intent(SingleThread.this, uploadComment.class);
+                i.putExtra("comment", comment);
+                i.putExtra("url", pageUrl);
+                startActivity(i);
+                new Thread(){
+                    @Override
+                    public void run(){
+                        try {
+                            SingleThreadData.doc = Jsoup.connect(SingleThreadData.url).get();
+                            initComment();
+                        } catch (IOException e) {
+                            Log.e("PAGE RELOAD", e.getMessage());
+                        }
+                    }
+                }.start();
             }
         });
     }
+
 
     private void initComment(){
         Elements elements = SingleThreadData.doc.select("#bo_vc");
@@ -160,7 +177,7 @@ public class SingleThread extends AppCompatActivity {
             comments.add(item);
         }
         Log.i("Comment SIZE!", String.valueOf(comments.size()));
-        for(CommentItem item :comments){
+        for(CommentItem item : comments){
             Log.i("Comment DATA", comments.indexOf(item) + "번 댓글");
             Log.i("Comment ID", item.id);
             Log.i("Comment DATE", item.date);

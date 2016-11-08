@@ -1,11 +1,11 @@
 [
     {
-        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_checkbox.xml",
-        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\abc_list_menu_item_checkbox.xml"
-    },
-    {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\floating_search_layout.xml",
         "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.github.arimorty\\floatingsearchview\\2.0.3\\res\\layout\\floating_search_layout.xml"
+    },
+    {
+        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_checkbox.xml",
+        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\abc_list_menu_item_checkbox.xml"
     },
     {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_part_chronometer.xml",
@@ -32,12 +32,12 @@
         "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\notification_template_big_media_narrow.xml"
     },
     {
-        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media.xml",
-        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\notification_template_media.xml"
-    },
-    {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_search_view.xml",
         "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\abc_search_view.xml"
+    },
+    {
+        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_template_media.xml",
+        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\notification_template_media.xml"
     },
     {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_screen_simple_overlay_action_mode.xml",
@@ -106,6 +106,10 @@
     {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\notification_media_action.xml",
         "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\notification_media_action.xml"
+    },
+    {
+        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\comment_upload_hide.xml",
+        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\src\\main\\res\\layout\\comment_upload_hide.xml"
     },
     {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_menu_item_action_area.xml",
@@ -184,12 +188,12 @@
         "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\abc_alert_dialog_button_bar_material.xml"
     },
     {
-        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_text_input_password_icon.xml",
-        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\design\\24.2.0\\res\\layout\\design_text_input_password_icon.xml"
-    },
-    {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\abc_list_menu_item_icon.xml",
         "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\appcompat-v7\\24.2.0\\res\\layout\\abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\design_text_input_password_icon.xml",
+        "source": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\exploded-aar\\com.android.support\\design\\24.2.0\\res\\layout\\design_text_input_password_icon.xml"
     },
     {
         "merged": "D:\\Android\\APP\\Schooluniform_student\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_auto_login_splash.xml",

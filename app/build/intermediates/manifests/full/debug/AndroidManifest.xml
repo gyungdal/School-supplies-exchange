@@ -36,6 +36,9 @@
             android:name="com.gyungdal.schooluniform_student.activity.signup.SignUp"
             android:label="@string/signup_page_title" />
         <activity
+            android:name="com.gyungdal.schooluniform_student.internet.board.uploadComment"
+            android:label="@string/upload_comment_page" />
+        <activity
             android:name="com.gyungdal.schooluniform_student.activity.board.list.ThreadList"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>

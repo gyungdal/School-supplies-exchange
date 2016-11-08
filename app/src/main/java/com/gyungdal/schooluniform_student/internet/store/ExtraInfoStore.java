@@ -9,6 +9,7 @@ import java.util.HashMap;
 public class ExtraInfoStore {
     private static final ExtraInfoStore instance;
     private HashMap<String, String> data;
+
     static {
         instance = new ExtraInfoStore();
         instance.data = new HashMap<>();

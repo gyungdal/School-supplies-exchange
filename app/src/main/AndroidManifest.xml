@@ -26,6 +26,9 @@
         <activity android:name=".activity.signup.SignUp"
             android:label="@string/signup_page_title"/>
 
+        <activity android:name=".internet.board.uploadComment"
+            android:label="@string/upload_comment_page"/>
+
         <activity android:name=".activity.board.list.ThreadList"
             android:theme="@style/AppTheme.NoActionBar">
 
