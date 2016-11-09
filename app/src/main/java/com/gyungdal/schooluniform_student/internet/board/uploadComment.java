@@ -25,6 +25,7 @@ import com.gyungdal.schooluniform_student.activity.board.detail.SingleThreadData
 import com.gyungdal.schooluniform_student.internet.store.CookieStore;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Comment;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class uploadComment extends AppCompatActivity {
             getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.comment_upload_hide);
-        dialog = ProgressDialog.show(uploadComment.this, "Wait...", "Comment Write...", true);
+        //dialog = ProgressDialog.show(uploadComment.this, "Wait...", "Comment Write...", true);
         CookieSyncManager.createInstance(uploadComment.this);
         CookieSyncManager.getInstance().startSync();
         CookieManager.getInstance().setAcceptCookie(true);
@@ -58,7 +59,7 @@ public class uploadComment extends AppCompatActivity {
             Toast.makeText(uploadComment.this, "Wrong!", Toast.LENGTH_SHORT).show();
         }
         web = (WebView)findViewById(R.id.upload_comment_web);
-        web.setVisibility(View.INVISIBLE);
+        //web.setVisibility(View.INVISIBLE);
         web.getSettings().setJavaScriptEnabled(true);
         web.getSettings().setSaveFormData(true);
         web.getSettings().setSupportMultipleWindows(true);
@@ -102,19 +103,23 @@ public class uploadComment extends AppCompatActivity {
 
 
     protected class ViewClient extends WebViewClient {
-
+        private int stack = 0;
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String ur) {
             CookieSyncManager.getInstance().sync();
+            if(stack++ > 2){
+                //dialog.dismiss();
+                uploadComment.this.finish();
+            }
             view.loadUrl(ur);
             return true;
         }
-
+        //TODO : 버튼이 눌리질 않음 Javascript 수정 필요
         @Override
         public void onReceivedError(WebView view, int errorCode,
                                     String description, String failingUrl) {
             super.onReceivedError(view, errorCode, description, failingUrl);
-            dialog.dismiss();
+            //dialog.dismiss();
             Log.e(TAG, "ERROR CODE : " + errorCode);
             Log.e(TAG, description);
         }
@@ -122,13 +127,15 @@ public class uploadComment extends AppCompatActivity {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
         public void onPageFinished(WebView v, final String url){
-            String Script = "var comment = document.getElementById('wr_content');" +
+            String Script = "var comment = document.getElementById(\"wr_content\");" +
                     "comment.value = '" + comment + "';" +
-                    "var button = document.getElementById('btn_submit');" +
-                    "button.click();";
+                    "var i;" +
+                    "var button = document.getElementById(\"btn_submit\");" +
+                    "for (i=0;i<button.length;i++){" +
+                    "button[i].click();" +
+                    "}";
+            Log.i("SCRIPT", Script);
             v.evaluateJavascript(Script, null);
-            dialog.dismiss();
-            uploadComment.this.finish();
         }
     }
 }
