@@ -23,6 +23,9 @@ import com.gyungdal.schooluniform_student.activity.board.detail.SingleThread;
 import com.gyungdal.schooluniform_student.activity.board.detail.SingleThreadData;
 import com.squareup.picasso.Picasso;
 
+import org.jsoup.Jsoup;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -70,12 +73,22 @@ public class Adapter extends RecyclerView.Adapter<Holder>{
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SingleThreadData.doc = items.get(position).getDoc();
-                SingleThreadData.url = items.get(position).getUrl();
-                SingleThreadData.title = items.get(position).getTitle();
-                SingleThreadData.photo = items.get(position).getPreviewUrl();
-                Intent intent = new Intent(context, SingleThread.class);
-                context.startActivity(intent);
+                new Thread(){
+                    @Override
+                    public void run(){
+                        try {
+                            SingleThreadData.doc = Jsoup.connect(items.get(position).getUrl()).get();
+                        } catch (IOException e) {
+                            Log.e("SingleThreadDATAGET!", e.getMessage());
+                        }
+                        SingleThreadData.url = items.get(position).getUrl();
+                        SingleThreadData.title = items.get(position).getTitle();
+                        SingleThreadData.photo = items.get(position).getPreviewUrl();
+                        items.get(position).setDoc(SingleThreadData.doc);
+                        Intent intent = new Intent(context, SingleThread.class);
+                        context.startActivity(intent);
+                    }
+                }.start();
             }
         });
     }

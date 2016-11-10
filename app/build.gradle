@@ -34,12 +34,9 @@ dependencies {
     //Image Load library
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    //이건 뭐더라
+    //Search Bar
     compile 'com.github.arimorty:floatingsearchview:2.0.3'
 
     //Over Scroll View
     compile 'me.everything:overscroll-decor-android:1.0.3'
-
-    //Multipart
-    compile 'com.loopj.android:android-async-http:1.4.9'
 }

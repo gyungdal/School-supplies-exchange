@@ -144,16 +144,7 @@ public class SingleThread extends AppCompatActivity {
                 i.putExtra("comment", comment);
                 i.putExtra("url", pageUrl);
                 SingleThread.this.startActivity(i);
-                new Thread(){
-                    @Override
-                    public void run(){
-                        try {
-                            SingleThreadData.doc = Jsoup.connect(SingleThreadData.url).get();
-                        } catch (IOException e) {
-                            Log.e("PAGE RELOAD", e.getMessage());
-                        }
-                    }
-                }.start();
+                SingleThread.this.finish();
             }
         });
     }
